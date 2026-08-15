@@ -1,5 +1,5 @@
 import type { Journey } from '../types';
-import { normalize } from './storage';
+import { migrate } from './migrate';
 
 /**
  * サーバーを持たずに共有するため、マップ全体を圧縮して URL のハッシュに載せる。
@@ -50,8 +50,9 @@ export async function decodeJourney(payload: string): Promise<Journey> {
     version === 'c'
       ? await streamThrough(bytes, new DecompressionStream('deflate-raw'))
       : bytes;
-  const parsed = JSON.parse(new TextDecoder().decode(raw)) as Journey;
-  return normalize(parsed);
+  const journey = migrate(JSON.parse(new TextDecoder().decode(raw)));
+  if (!journey) throw new Error('共有リンクのデータを読み取れませんでした');
+  return journey;
 }
 
 export async function buildShareUrl(journey: Journey): Promise<string> {

@@ -1,5 +1,11 @@
 /** カスタマージャーニーマップのデータモデル */
 
+/**
+ * 保存データのスキーマ版数。
+ * データモデルを変更したらこの値を上げ、`lib/migrate.ts` に変換を追加する。
+ */
+export const SCHEMA_VERSION = 1;
+
 /** 行のグルーピング（左端の帯とカラーで表現する） */
 export type GroupKey = 'user' | 'triple' | 'execution' | 'result' | 'custom';
 
@@ -43,6 +49,8 @@ export interface Persona {
 }
 
 export interface Journey {
+  /** このデータが従うスキーマの版数 */
+  schemaVersion: number;
   id: string;
   title: string;
   /** ブランド／商材名など */
@@ -57,6 +65,11 @@ export interface Journey {
 }
 
 export const cellKey = (rowKey: string, stageId: string) => `${rowKey}::${stageId}`;
+
+export function parseCellKey(key: string): { rowKey: string; stageId: string } | null {
+  const at = key.indexOf('::');
+  return at < 0 ? null : { rowKey: key.slice(0, at), stageId: key.slice(at + 2) };
+}
 
 export const GROUPS: GroupDef[] = [
   { key: 'user', label: 'ユーザー理解' },

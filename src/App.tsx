@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Journey } from './types';
-import { loadAll, normalize, saveAll } from './lib/storage';
+import { loadAll, saveAll } from './lib/storage';
+import { migrate } from './lib/migrate';
 import { decodeJourney } from './lib/share';
 import { importJson } from './lib/exporters';
 import { buildJourney, TEMPLATES } from './data/templates';
@@ -106,9 +107,9 @@ export default function App() {
 
   const handleImport = async (file: File) => {
     try {
-      const parsed = normalize(await importJson(file));
-      const now = Date.now();
-      adopt({ ...parsed, id: uid('m'), createdAt: parsed.createdAt ?? now, updatedAt: now });
+      const parsed = migrate(await importJson(file));
+      if (!parsed) throw new Error('このファイルはマップとして読み込めませんでした');
+      adopt({ ...parsed, id: uid('m'), updatedAt: Date.now() });
     } catch (e) {
       alert(e instanceof Error ? e.message : '読み込みに失敗しました');
     }

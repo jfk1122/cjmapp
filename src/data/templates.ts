@@ -1,4 +1,12 @@
-import { DEFAULT_ROWS, cellKey, type Card, type Journey, type Stage, type Tone } from '../types';
+import {
+  DEFAULT_ROWS,
+  SCHEMA_VERSION,
+  cellKey,
+  type Card,
+  type Journey,
+  type Stage,
+  type Tone,
+} from '../types';
 import { uid } from '../lib/id';
 
 interface TemplateSpec {
@@ -33,6 +41,7 @@ export function buildJourney(spec: TemplateSpec): Journey {
 
   const now = Date.now();
   return {
+    schemaVersion: SCHEMA_VERSION,
     id: uid('m'),
     title: spec.title,
     subtitle: spec.subtitle,

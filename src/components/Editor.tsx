@@ -6,7 +6,18 @@ import { Board } from './Board';
 import { PersonaPanel } from './PersonaPanel';
 import { ShareDialog } from './ShareDialog';
 import { Menu } from './Menu';
-import { IconBack, IconCopy, IconDownload, IconPlus, IconPrint, IconShare, IconUndo } from './Icons';
+import { ThemeToggle } from './ThemeToggle';
+import { PresentMode } from './PresentMode';
+import {
+  IconBack,
+  IconCopy,
+  IconDownload,
+  IconPlus,
+  IconPresent,
+  IconPrint,
+  IconShare,
+  IconUndo,
+} from './Icons';
 
 interface Props {
   journey: Journey;
@@ -30,6 +41,7 @@ export function Editor({
   savedLabel,
 }: Props) {
   const [sharing, setSharing] = useState(false);
+  const [presenting, setPresenting] = useState(false);
 
   const usedRowKeys = new Set(journey.rows.map((r) => r.key));
   const presetItems = ROW_PRESETS.filter((p) => !usedRowKeys.has(p.key)).map((p) => ({
@@ -94,6 +106,18 @@ export function Editor({
             </button>
           )}
 
+          <button
+            type="button"
+            className="btn btn--ghost"
+            onClick={() => setPresenting(true)}
+            title="プレゼンモード（フェーズごとに送る）"
+          >
+            <IconPresent />
+            <span className="hide-sm">発表</span>
+          </button>
+
+          <ThemeToggle />
+
           <Menu
             className="btn btn--ghost"
             label="エクスポート"
@@ -153,7 +177,7 @@ export function Editor({
           </Menu>
 
           <span className="tools-hint">
-            カードはドラッグで移動できます／Enter で確定・Shift + Enter で改行
+Enter で次のカード／Tab で次のフェーズ／複数行の貼り付けは自動で分割されます
           </span>
         </div>
       )}
@@ -161,6 +185,7 @@ export function Editor({
       <Board journey={journey} readOnly={readOnly} onChange={onChange} />
 
       {sharing && <ShareDialog journey={journey} onClose={() => setSharing(false)} />}
+      {presenting && <PresentMode journey={journey} onClose={() => setPresenting(false)} />}
     </div>
   );
 }

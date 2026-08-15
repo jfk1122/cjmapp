@@ -36,13 +36,13 @@ export function exportCsv(journey: Journey): void {
   download(`${safeName(journey.title)}.csv`, '﻿' + lines.join('\r\n'), 'text/csv');
 }
 
-export function importJson(file: File): Promise<Journey> {
+export function importJson(file: File): Promise<unknown> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onerror = () => reject(new Error('ファイルを読み込めませんでした'));
     reader.onload = () => {
       try {
-        resolve(JSON.parse(String(reader.result)) as Journey);
+        resolve(JSON.parse(String(reader.result)));
       } catch {
         reject(new Error('JSON の形式が正しくありません'));
       }
