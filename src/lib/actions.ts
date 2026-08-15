@@ -1,4 +1,4 @@
-import { cellKey, type Card, type Journey, type RowDef, type Stage } from '../types';
+import { cellKey, type Card, type GroupKey, type Journey, type RowDef, type Stage } from '../types';
 import { uid } from './id';
 
 const touch = (j: Journey): Journey => ({ ...j, updatedAt: Date.now() });
@@ -92,6 +92,12 @@ export function moveRow(j: Journey, key: string, dir: -1 | 1): Journey {
   const index = j.rows.findIndex((r) => r.key === key);
   if (index < 0) return j;
   return touch({ ...j, rows: move(j.rows, index, index + dir) });
+}
+
+/* ---------------- グループ ---------------- */
+
+export function updateGroupLabel(j: Journey, group: GroupKey, label: string): Journey {
+  return touch({ ...j, groupLabels: { ...j.groupLabels, [group]: label } });
 }
 
 /* ---------------- カード ---------------- */

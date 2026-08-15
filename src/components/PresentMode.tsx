@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { GROUPS, cellKey, type Journey } from '../types';
+import { GROUPS, cellKey, groupLabelOf, type Journey } from '../types';
 import { IconClose } from './Icons';
 
 interface Props {
@@ -36,7 +36,7 @@ export function PresentMode({ journey, onClose }: Props) {
 
   // 行はグループ順にまとめ直して読ませる
   const sections = GROUPS.map((g) => ({
-    label: g.label,
+    label: groupLabelOf(journey, g.key),
     rows: journey.rows.filter((r) => r.group === g.key),
   })).filter((s) => s.rows.length > 0);
 

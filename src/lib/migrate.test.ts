@@ -32,6 +32,27 @@ describe('migrate', () => {
     expect(j!.createdAt).toBe(1000);
   });
 
+  it('v1 データに groupLabels を足して v2 にする', () => {
+    const v1 = { ...v0(), schemaVersion: 1 };
+    const j = migrate(v1)!;
+
+    expect(j.schemaVersion).toBe(2);
+    expect(j.groupLabels).toEqual({});
+    // v1 の中身はそのまま残る
+    expect(j.title).toBe('旧データ');
+    expect(j.cells['userflow::s1'][0].text).toBe('広告に接触');
+  });
+
+  it('groupLabels の不正な値は落とす', () => {
+    const j = migrate({
+      ...v0(),
+      schemaVersion: 1,
+      groupLabels: { triple: '3つのメディア', unknown: 'x', user: 42 },
+    })!;
+
+    expect(j.groupLabels).toEqual({ triple: '3つのメディア' });
+  });
+
   it('現行版のデータはそのまま通す', () => {
     const source = buildJourney(TEMPLATES[1]);
     const j = migrate(JSON.parse(JSON.stringify(source)));
