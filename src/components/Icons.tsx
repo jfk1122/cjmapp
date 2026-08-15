@@ -88,6 +88,32 @@ export const IconMap = ({ size = 16 }: Props) => (
   </svg>
 );
 
+export const IconTheme = ({ size = 16 }: Props) => (
+  <svg {...base(size)}>
+    <circle cx="12" cy="12" r="4.2" />
+    <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+  </svg>
+);
+
+export const IconZoomOut = ({ size = 16 }: Props) => (
+  <svg {...base(size)}>
+    <path d="M5 12h14" />
+  </svg>
+);
+
+export const IconFit = ({ size = 16 }: Props) => (
+  <svg {...base(size)}>
+    <path d="M4 9V5a1 1 0 0 1 1-1h4M20 9V5a1 1 0 0 0-1-1h-4M4 15v4a1 1 0 0 0 1 1h4M20 15v4a1 1 0 0 1-1 1h-4" />
+  </svg>
+);
+
+export const IconPresent = ({ size = 16 }: Props) => (
+  <svg {...base(size)}>
+    <rect x="3" y="4" width="18" height="12" rx="1.5" />
+    <path d="M12 16v4M8 20h8" />
+  </svg>
+);
+
 export const IconChevron = ({ size = 16 }: Props) => (
   <svg {...base(size)}>
     <path d="m6 9 6 6 6-6" />

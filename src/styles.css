@@ -37,6 +37,7 @@
 
   --radius: 10px;
   --head-w: 178px;
+  --rail-w: 34px;
   --col-w: minmax(252px, 1fr);
 }
 
@@ -691,6 +692,7 @@ p {
 }
 
 .board-corner {
+  grid-column: 1 / 3;
   position: sticky;
   top: 0;
   left: 0;
@@ -712,10 +714,36 @@ p {
   position: sticky;
   top: 0;
   z-index: 3;
-  padding: 10px 10px 8px;
+  padding: 10px 22px 10px 14px;
   border-bottom: 1px solid var(--border-strong);
-  border-left: 1px solid var(--border);
   background: var(--bg);
+}
+
+/* 矢羽根は背景専用の擬似要素で描く。
+   .stage-head 自体を clip-path で切ると「⋮」メニューまで切れてしまう */
+.stage-head::before,
+.stage-head::after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  clip-path: polygon(0 0, calc(100% - 13px) 0, 100% 50%, calc(100% - 13px) 100%, 0 100%);
+}
+
+.stage-head::before {
+  inset: 5px 2px 8px 0;
+  background: var(--border-strong);
+}
+
+.stage-head::after {
+  inset: 6px 3px 9px 1px;
+  background: var(--surface);
+}
+
+.stage-head-top,
+.stage-summary,
+.stage-summary-input {
+  position: relative;
+  z-index: 1;
 }
 
 .stage-head-top {
@@ -759,51 +787,73 @@ p {
   line-height: 1.5;
 }
 
-/* 行グループの帯 */
-.group-band {
-  grid-column: 1 / -1;
-  padding: 14px 10px 5px;
-  color: var(--band, var(--muted));
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-}
-
-.group-band--user {
-  --band: var(--g-user);
-}
-.group-band--triple {
-  --band: var(--g-triple);
-}
-.group-band--execution {
-  --band: var(--g-execution);
-}
-.group-band--result {
-  --band: var(--g-result);
-}
-.group-band--custom {
-  --band: var(--g-custom);
-}
-
-/* 行見出し */
-.row-head {
+/* 行グループ: 左端の縦ラベルと破線の区切り */
+.group-rail {
+  grid-column: 1;
   position: sticky;
   left: 0;
-  z-index: 2;
-  padding: 10px 10px 10px 12px;
+  z-index: 4;
+  overflow: hidden;
   border-top: 1px solid var(--border);
   background: var(--bg);
 }
 
-.row-head::before {
+.group-rail::before {
   content: '';
   position: absolute;
   top: 10px;
   bottom: 10px;
-  left: 0;
+  left: 4px;
   width: 3px;
-  border-radius: 0 3px 3px 0;
-  background: var(--accent-line, var(--border-strong));
+  border-radius: 3px;
+  background: var(--rail, var(--border-strong));
+}
+
+/* writing-mode: vertical-rl は縦書きメトリクスを持たないフォントだと
+   文字送りが崩れるため、横書きのまま回転させて縦ラベルにする */
+.group-rail-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-90deg);
+  white-space: nowrap;
+  color: var(--rail, var(--muted));
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.group-rail--user {
+  --rail: var(--g-user);
+}
+.group-rail--triple {
+  --rail: var(--g-triple);
+}
+.group-rail--execution {
+  --rail: var(--g-execution);
+}
+.group-rail--result {
+  --rail: var(--g-result);
+}
+.group-rail--custom {
+  --rail: var(--g-custom);
+}
+
+.group-divider {
+  grid-column: 1 / -1;
+  height: 13px;
+  border-bottom: 1px dashed var(--border-strong);
+}
+
+/* 行見出し */
+.row-head {
+  grid-column: 2;
+  position: sticky;
+  left: var(--rail-w);
+  z-index: 2;
+  padding: 10px 10px 10px 12px;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
 }
 
 .row-head--user {
@@ -1035,6 +1085,45 @@ p {
   --dot: #8b5cf6;
 }
 
+/* ========== ズーム ========== */
+.board-scroll {
+  position: relative;
+}
+
+.zoom-bar {
+  position: sticky;
+  bottom: 12px;
+  left: calc(100% - 172px);
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  width: 160px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--shadow-md);
+}
+
+.zoom-value {
+  flex: 1;
+  padding: 4px 0;
+  border: none;
+  border-radius: 999px;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.zoom-value:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
 /* ========== モーダル ========== */
 .modal-backdrop {
   position: fixed;
@@ -1100,6 +1189,173 @@ p {
   font-size: 12px;
 }
 
+/* ========== プレゼンモード ========== */
+.present {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+
+.present-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.present-doc {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+}
+
+.present-title {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.present-persona {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.present-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.present-count {
+  color: var(--muted);
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.present-stage {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 26px 32px 14px;
+}
+
+.present-index {
+  color: var(--accent);
+  font-size: 15px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.present-name {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.present-summary {
+  color: var(--muted);
+  font-size: 13.5px;
+}
+
+.present-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  align-content: start;
+  gap: 18px 24px;
+  overflow: auto;
+  padding: 0 32px 24px;
+}
+
+.present-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.present-section-title {
+  color: var(--faint);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.present-row {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-left: 10px;
+  border-left: 3px solid var(--accent-line, var(--border-strong));
+}
+
+.present-row--user {
+  --accent-line: var(--g-user);
+}
+.present-row--triple {
+  --accent-line: var(--g-triple);
+}
+.present-row--execution {
+  --accent-line: var(--g-execution);
+}
+.present-row--result {
+  --accent-line: var(--g-result);
+}
+.present-row--custom {
+  --accent-line: var(--g-custom);
+}
+
+.present-row-label {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.present-row-empty {
+  color: var(--faint);
+  font-size: 12px;
+}
+
+.present-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.present-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.present-dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--border-strong);
+  cursor: pointer;
+}
+
+.present-dot.is-active {
+  background: var(--accent);
+}
+
+.present-empty {
+  margin: auto;
+  color: var(--muted);
+}
+
 /* ========== 印刷 ========== */
 @media print {
   @page {
@@ -1113,6 +1369,7 @@ p {
 
   .app-bar-actions,
   .board-tools,
+  .zoom-bar,
   .cell-add,
   .icon-btn,
   .persona-toggle svg,
@@ -1136,8 +1393,13 @@ p {
 
   .stage-head,
   .row-head,
-  .board-corner {
+  .board-corner,
+  .group-rail {
     position: static;
+    background: #fff;
+  }
+
+  .stage-head::after {
     background: #fff;
   }
 

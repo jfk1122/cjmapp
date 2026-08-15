@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { TONES, type Card } from '../types';
+import { TONES, type Card, type Tone } from '../types';
+import type { Advance } from './Cell';
 import { IconTrash } from './Icons';
 
 interface Props {
@@ -7,8 +8,10 @@ interface Props {
   readOnly: boolean;
   editing: boolean;
   onStartEdit: () => void;
-  onEndEdit: () => void;
-  onChange: (patch: Partial<Card>) => void;
+  /** text が null なら取り消し。確定と次の移動先を 1 回で親に伝える */
+  onResolve: (text: string | null, intent: Advance) => void;
+  onPasteLines: (lines: string[]) => void;
+  onChangeTone: (tone: Tone) => void;
   onDelete: () => void;
   onDragStart: (e: React.DragEvent) => void;
   onDragOver: (e: React.DragEvent) => void;
@@ -16,13 +19,22 @@ interface Props {
   dropIndicator: boolean;
 }
 
+/** 箇条書き記号を落として 1 行 1 カードにする */
+function splitLines(text: string): string[] {
+  return text
+    .split(/\r?\n/)
+    .map((line) => line.replace(/^\s*[・\-*•]\s*/, '').trim())
+    .filter(Boolean);
+}
+
 export function CardItem({
   card,
   readOnly,
   editing,
   onStartEdit,
-  onEndEdit,
-  onChange,
+  onResolve,
+  onPasteLines,
+  onChangeTone,
   onDelete,
   onDragStart,
   onDragOver,
@@ -31,9 +43,15 @@ export function CardItem({
 }: Props) {
   const [draft, setDraft] = useState(card.text);
   const textarea = useRef<HTMLTextAreaElement>(null);
+  // キー操作と blur が続けて発火しても、確定は 1 回だけにする
+  const resolved = useRef(false);
 
   useEffect(() => {
-    if (editing) setDraft(card.text);
+    if (editing) {
+      setDraft(card.text);
+      resolved.current = false;
+      textarea.current?.focus();
+    }
   }, [editing, card.text]);
 
   useLayoutEffect(() => {
@@ -43,18 +61,10 @@ export function CardItem({
     el.style.height = `${el.scrollHeight}px`;
   }, [draft, editing]);
 
-  useEffect(() => {
-    if (editing) textarea.current?.focus();
-  }, [editing]);
-
-  const commit = () => {
-    const text = draft.trim();
-    if (!text) {
-      onDelete();
-      return;
-    }
-    if (text !== card.text) onChange({ text });
-    onEndEdit();
+  const resolve = (text: string | null, intent: Advance) => {
+    if (resolved.current) return;
+    resolved.current = true;
+    onResolve(text, intent);
   };
 
   if (editing) {
@@ -67,16 +77,26 @@ export function CardItem({
           rows={1}
           placeholder="内容を入力"
           onChange={(e) => setDraft(e.target.value)}
-          onBlur={commit}
+          onBlur={() => resolve(draft, 'close')}
+          onPaste={(e) => {
+            const text = e.clipboardData.getData('text/plain');
+            const lines = splitLines(text);
+            if (lines.length < 2) return;
+            e.preventDefault();
+            resolved.current = true;
+            onPasteLines(lines);
+          }}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault();
-              commit();
+              // 空のまま Enter なら連続入力を終える
+              resolve(draft, draft.trim() === '' ? 'close' : 'next-card');
+            } else if (e.key === 'Tab') {
+              e.preventDefault();
+              resolve(draft, e.shiftKey ? 'prev-cell' : 'next-cell');
             } else if (e.key === 'Escape') {
               e.preventDefault();
-              setDraft(card.text);
-              if (!card.text) onDelete();
-              else onEndEdit();
+              resolve(null, 'close');
             }
           }}
         />
@@ -87,10 +107,10 @@ export function CardItem({
               type="button"
               className={`tone-dot tone-dot--${t.key}${card.tone === t.key ? ' is-active' : ''}`}
               aria-label={`色: ${t.label}`}
-              // onMouseDown で処理して textarea の blur による確定より先に色を反映させる
+              // onMouseDown で処理して、textarea の blur による確定より先に色を反映させる
               onMouseDown={(e) => {
                 e.preventDefault();
-                onChange({ tone: t.key });
+                onChangeTone(t.key);
               }}
             />
           ))}
@@ -100,6 +120,7 @@ export function CardItem({
             aria-label="カードを削除"
             onMouseDown={(e) => {
               e.preventDefault();
+              resolved.current = true;
               onDelete();
             }}
           >

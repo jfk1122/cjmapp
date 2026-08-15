@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { Card } from '../types';
+import type { Card, Tone } from '../types';
 import { CardItem } from './CardItem';
 import { IconPlus } from './Icons';
 
@@ -8,6 +8,9 @@ export interface DragPayload {
   cardId: string;
 }
 
+/** カードの編集を抜けたあと、次にどこへ進むか */
+export type Advance = 'close' | 'next-card' | 'next-cell' | 'prev-cell';
+
 const MIME = 'application/x-cjm-card';
 
 interface Props {
@@ -15,7 +18,12 @@ interface Props {
   cards: Card[];
   hint: string;
   readOnly: boolean;
-  onAdd: () => string;
+  /** このセルで編集中のカード。Board が全セルを横断して 1 つだけ持つ */
+  editingCardId: string | null;
+  onAdd: () => void;
+  onStartEdit: (cardId: string) => void;
+  onResolve: (cardId: string, text: string | null, intent: Advance) => void;
+  onPasteLines: (cardId: string, lines: string[]) => void;
   onChangeCard: (cardId: string, patch: Partial<Card>) => void;
   onDeleteCard: (cardId: string) => void;
   onMoveCard: (payload: DragPayload, toKey: string, beforeCardId: string | null) => void;
@@ -26,12 +34,15 @@ export function Cell({
   cards,
   hint,
   readOnly,
+  editingCardId,
   onAdd,
+  onStartEdit,
+  onResolve,
+  onPasteLines,
   onChangeCard,
   onDeleteCard,
   onMoveCard,
 }: Props) {
-  const [editingId, setEditingId] = useState<string | null>(null);
   const [dropTarget, setDropTarget] = useState<string | null>(null);
 
   const readPayload = (e: React.DragEvent): DragPayload | null => {
@@ -69,15 +80,13 @@ export function Cell({
           key={card.id}
           card={card}
           readOnly={readOnly}
-          editing={editingId === card.id}
+          editing={editingCardId === card.id}
           dropIndicator={dropTarget === card.id}
-          onStartEdit={() => setEditingId(card.id)}
-          onEndEdit={() => setEditingId(null)}
-          onChange={(patch) => onChangeCard(card.id, patch)}
-          onDelete={() => {
-            setEditingId(null);
-            onDeleteCard(card.id);
-          }}
+          onStartEdit={() => onStartEdit(card.id)}
+          onResolve={(text, intent) => onResolve(card.id, text, intent)}
+          onPasteLines={(lines) => onPasteLines(card.id, lines)}
+          onChangeTone={(tone: Tone) => onChangeCard(card.id, { tone })}
+          onDelete={() => onDeleteCard(card.id)}
           onDragStart={(e) => {
             e.dataTransfer.setData(MIME, JSON.stringify({ fromKey: cellId, cardId: card.id }));
             e.dataTransfer.effectAllowed = 'move';
@@ -98,7 +107,7 @@ export function Cell({
         <button
           type="button"
           className={`cell-add${cards.length === 0 ? ' cell-add--empty' : ''}`}
-          onClick={() => setEditingId(onAdd())}
+          onClick={onAdd}
         >
           <IconPlus size={14} />
           <span>{cards.length === 0 ? hint : '追加'}</span>
