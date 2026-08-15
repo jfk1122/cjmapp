@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import * as A from './actions';
 import { buildJourney, TEMPLATES } from '../data/templates';
-import { cellKey, type Journey } from '../types';
+import { cellKey, groupLabelOf, type Journey } from '../types';
 
 const ec = () => buildJourney(TEMPLATES.find((t) => t.id === 'ec')!);
 const blank = () => buildJourney(TEMPLATES[0]);
@@ -98,6 +98,22 @@ describe('行', () => {
     const j = blank();
     const last = j.rows[j.rows.length - 1].key;
     expect(A.moveRow(j, last, 1).rows[j.rows.length - 1].key).toBe(last);
+  });
+});
+
+describe('グループ', () => {
+  it('updateGroupLabel はグループ名を差し替える', () => {
+    const j = blank();
+    const next = A.updateGroupLabel(j, 'triple', '3つのメディア');
+
+    expect(groupLabelOf(next, 'triple')).toBe('3つのメディア');
+    // 他のグループは既定名のまま
+    expect(groupLabelOf(next, 'user')).toBe('ユーザー理解');
+  });
+
+  it('空文字にすると既定名に戻る', () => {
+    const j = A.updateGroupLabel(blank(), 'user', '  ');
+    expect(groupLabelOf(j, 'user')).toBe('ユーザー理解');
   });
 });
 

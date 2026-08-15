@@ -74,6 +74,15 @@ function toCells(v: unknown): Record<string, Card[]> {
   return cells;
 }
 
+function toGroupLabels(v: unknown): Partial<Record<GroupKey, string>> {
+  if (!isObject(v)) return {};
+  const labels: Partial<Record<GroupKey, string>> = {};
+  for (const [key, value] of Object.entries(v)) {
+    if (GROUP_KEYS.has(key) && typeof value === 'string') labels[key as GroupKey] = value;
+  }
+  return labels;
+}
+
 /** v0（版数フィールドを持たない初期リリース）→ v1: 欠損フィールドを補完する */
 const v0ToV1: Migration = (d) => {
   const now = Date.now();
@@ -96,7 +105,14 @@ const v0ToV1: Migration = (d) => {
   };
 };
 
-const MIGRATIONS: Migration[] = [v0ToV1];
+/** v1 → v2: グループ名の変更を保持できるようにする */
+const v1ToV2: Migration = (d) => ({
+  ...d,
+  schemaVersion: 2,
+  groupLabels: toGroupLabels(d.groupLabels),
+});
+
+const MIGRATIONS: Migration[] = [v0ToV1, v1ToV2];
 
 /**
  * 変換後の形を検証する。

@@ -49,6 +49,7 @@ export function buildJourney(spec: TemplateSpec): Journey {
     stages,
     rows: DEFAULT_ROWS.map((r) => ({ ...r })),
     cells,
+    groupLabels: {},
     createdAt: now,
     updatedAt: now,
   };

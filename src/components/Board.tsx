@@ -1,7 +1,7 @@
 import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import {
-  GROUPS,
   cellKey,
+  groupLabelOf,
   parseCellKey,
   type GroupKey,
   type Journey,
@@ -36,7 +36,6 @@ const MAX_ZOOM = 1;
 const ZOOM_STEP = 0.1;
 
 const clampZoom = (v: number) => Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, v));
-const groupLabel = (key: string) => GROUPS.find((g) => g.key === key)?.label ?? 'その他';
 
 function toGroupRuns(rows: RowDef[]): GroupRun[] {
   const runs: GroupRun[] = [];
@@ -164,12 +163,13 @@ export function Board({ journey, readOnly, onChange }: Props) {
         {runs.map((run, runIndex) => (
           <Fragment key={`${run.group}-${runIndex}`}>
             {runIndex > 0 && <div className="group-divider" />}
-            <div
-              className={`group-rail group-rail--${run.group}`}
-              style={{ gridRow: `span ${run.rows.length}` }}
-            >
-              <span className="group-rail-label">{groupLabel(run.group)}</span>
-            </div>
+            <GroupRail
+              group={run.group}
+              span={run.rows.length}
+              readOnly={readOnly}
+              journey={journey}
+              onChange={onChange}
+            />
             {run.rows.map((row) => (
               <Fragment key={row.key}>
                 <RowHead
@@ -244,6 +244,36 @@ export function Board({ journey, readOnly, onChange }: Props) {
           <IconFit size={15} />
         </button>
       </div>
+    </div>
+  );
+}
+
+interface GroupRailProps {
+  group: GroupKey;
+  span: number;
+  readOnly: boolean;
+  journey: Journey;
+  onChange: (next: Journey) => void;
+}
+
+/** 左端の縦ラベル。グループ名はマップごとに変更できる */
+function GroupRail({ group, span, readOnly, journey, onChange }: GroupRailProps) {
+  const label = groupLabelOf(journey, group);
+  return (
+    <div className={`group-rail group-rail--${group}`} style={{ gridRow: `span ${span}` }}>
+      {readOnly ? (
+        <span className="group-rail-label">{label}</span>
+      ) : (
+        <input
+          className="group-rail-label group-rail-input"
+          value={journey.groupLabels?.[group] ?? label}
+          placeholder="グループ名"
+          aria-label={`グループ名（${label}）`}
+          // 回転しているため、入力欄の幅が見た目の高さになる
+          style={{ width: `${Math.max(label.length + 3, 7)}em` }}
+          onChange={(e) => onChange(A.updateGroupLabel(journey, group, e.target.value))}
+        />
+      )}
     </div>
   );
 }

@@ -4,7 +4,7 @@
  * 保存データのスキーマ版数。
  * データモデルを変更したらこの値を上げ、`lib/migrate.ts` に変換を追加する。
  */
-export const SCHEMA_VERSION = 1;
+export const SCHEMA_VERSION = 2;
 
 /** 行のグルーピング（左端の帯とカラーで表現する） */
 export type GroupKey = 'user' | 'triple' | 'execution' | 'result' | 'custom';
@@ -60,6 +60,8 @@ export interface Journey {
   rows: RowDef[];
   /** `${rowKey}::${stageId}` をキーにしたカードの配列 */
   cells: Record<string, Card[]>;
+  /** グループ名の変更。未設定なら GROUPS の既定名を使う */
+  groupLabels: Partial<Record<GroupKey, string>>;
   createdAt: number;
   updatedAt: number;
 }
@@ -69,6 +71,13 @@ export const cellKey = (rowKey: string, stageId: string) => `${rowKey}::${stageI
 export function parseCellKey(key: string): { rowKey: string; stageId: string } | null {
   const at = key.indexOf('::');
   return at < 0 ? null : { rowKey: key.slice(0, at), stageId: key.slice(at + 2) };
+}
+
+/** グループの表示名。マップ側で変更されていればそれを優先する */
+export function groupLabelOf(journey: Journey, key: GroupKey): string {
+  const custom = journey.groupLabels?.[key];
+  if (typeof custom === 'string' && custom.trim() !== '') return custom;
+  return GROUPS.find((g) => g.key === key)?.label ?? 'その他';
 }
 
 export const GROUPS: GroupDef[] = [
