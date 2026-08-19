@@ -20,6 +20,8 @@ interface Props {
   readOnly: boolean;
   /** このセルで編集中のカード。Board が全セルを横断して 1 つだけ持つ */
   editingCardId: string | null;
+  /** 診断からの移動で一時的に光らせる */
+  highlighted: boolean;
   onAdd: () => void;
   onStartEdit: (cardId: string) => void;
   onResolve: (cardId: string, text: string | null, intent: Advance) => void;
@@ -35,6 +37,7 @@ export function Cell({
   hint,
   readOnly,
   editingCardId,
+  highlighted,
   onAdd,
   onStartEdit,
   onResolve,
@@ -64,7 +67,8 @@ export function Cell({
 
   return (
     <div
-      className={`cell${dropTarget === 'end' ? ' cell--drop' : ''}`}
+      data-cell-id={cellId}
+      className={`cell${dropTarget === 'end' ? ' cell--drop' : ''}${highlighted ? ' cell--focused' : ''}`}
       onDragOver={(e) => {
         if (readOnly) return;
         e.preventDefault();
