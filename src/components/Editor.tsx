@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ROW_PRESETS, type Journey } from '../types';
 import * as A from '../lib/actions';
+import { diagnose } from '../lib/diagnose';
 import { exportCsv, exportJson } from '../lib/exporters';
 import { Board } from './Board';
 import { PersonaPanel } from './PersonaPanel';
@@ -8,9 +9,11 @@ import { ShareDialog } from './ShareDialog';
 import { Menu } from './Menu';
 import { ThemeToggle } from './ThemeToggle';
 import { PresentMode } from './PresentMode';
+import { DiagnosePanel } from './DiagnosePanel';
 import {
   IconBack,
   IconCopy,
+  IconDiagnose,
   IconDownload,
   IconPlus,
   IconPresent,
@@ -42,6 +45,10 @@ export function Editor({
 }: Props) {
   const [sharing, setSharing] = useState(false);
   const [presenting, setPresenting] = useState(false);
+  const [diagnosing, setDiagnosing] = useState(false);
+  const [focus, setFocus] = useState<{ cellId: string; at: number } | null>(null);
+
+  const diagnosis = useMemo(() => diagnose(journey), [journey]);
 
   const usedRowKeys = new Set(journey.rows.map((r) => r.key));
   const presetItems = ROW_PRESETS.filter((p) => !usedRowKeys.has(p.key)).map((p) => ({
@@ -105,6 +112,20 @@ export function Editor({
               自分のマップとして複製
             </button>
           )}
+
+          <button
+            type="button"
+            className={`btn btn--ghost${diagnosing ? ' is-active' : ''}`}
+            onClick={() => setDiagnosing((v) => !v)}
+            title="ジャーニーの構造を診断する"
+            aria-pressed={diagnosing}
+          >
+            <IconDiagnose />
+            <span className="hide-sm">診断</span>
+            {diagnosis.findings.length > 0 && (
+              <span className="btn-badge">{diagnosis.findings.length}</span>
+            )}
+          </button>
 
           <button
             type="button"
@@ -182,7 +203,17 @@ Enter で次のカード／Tab で次のフェーズ／複数行の貼り付け�
         </div>
       )}
 
-      <Board journey={journey} readOnly={readOnly} onChange={onChange} />
+      <div className="editor-body">
+        <Board journey={journey} readOnly={readOnly} onChange={onChange} focus={focus} />
+        {diagnosing && (
+          <DiagnosePanel
+            result={diagnosis}
+            stages={journey.stages}
+            onClose={() => setDiagnosing(false)}
+            onFocusCell={(cellId) => setFocus({ cellId, at: Date.now() })}
+          />
+        )}
+      </div>
 
       {sharing && <ShareDialog journey={journey} onClose={() => setSharing(false)} />}
       {presenting && <PresentMode journey={journey} onClose={() => setPresenting(false)} />}

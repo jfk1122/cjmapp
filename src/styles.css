@@ -1206,6 +1206,255 @@ p {
   font-size: 12px;
 }
 
+/* ========== ジャーニー診断 ========== */
+.editor-body {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.editor-body > .board-scroll {
+  flex: 1;
+  min-width: 0;
+}
+
+.btn.is-active {
+  background: var(--accent-soft);
+  border-color: transparent;
+  color: var(--accent);
+}
+
+.btn-badge {
+  min-width: 17px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 700;
+  line-height: 17px;
+  text-align: center;
+}
+
+.diagnose {
+  width: 320px;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  padding: 14px 16px 24px;
+  border-left: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.diagnose-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.diagnose-title {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.diagnose-score {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid var(--score-line, var(--border));
+  border-radius: 12px;
+  background: var(--score-bg, var(--surface-2));
+}
+
+.diagnose-score-value {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  color: var(--score-fg, var(--text));
+}
+
+.diagnose-score-number {
+  font-size: 32px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.diagnose-score-unit {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.diagnose-score-label {
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.diagnose-score-detail {
+  color: var(--muted);
+  font-size: 11.5px;
+}
+
+.diagnose-score--good {
+  --score-fg: var(--g-result);
+  --score-bg: color-mix(in srgb, var(--g-result) 10%, transparent);
+  --score-line: color-mix(in srgb, var(--g-result) 30%, transparent);
+}
+.diagnose-score--mid {
+  --score-fg: var(--g-user);
+  --score-bg: color-mix(in srgb, var(--g-user) 10%, transparent);
+  --score-line: color-mix(in srgb, var(--g-user) 30%, transparent);
+}
+.diagnose-score--low {
+  --score-fg: var(--g-triple);
+  --score-bg: color-mix(in srgb, var(--g-triple) 12%, transparent);
+  --score-line: color-mix(in srgb, var(--g-triple) 32%, transparent);
+}
+.diagnose-score--empty {
+  --score-fg: var(--muted);
+}
+
+.diagnose-summary {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.diagnose-summary strong {
+  color: var(--danger);
+}
+
+.diagnose-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.finding {
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--surface-2);
+}
+
+.finding-button,
+.finding--static {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+  padding: 9px 11px;
+  border: none;
+  border-radius: 9px;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+}
+
+.finding-button {
+  cursor: pointer;
+}
+
+.finding-button:hover {
+  background: var(--accent-soft);
+}
+
+.finding-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.finding-badge {
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 700;
+}
+
+.finding-badge--warn {
+  background: color-mix(in srgb, var(--danger) 15%, transparent);
+  color: var(--danger);
+}
+
+.finding-badge--info {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.finding-stage {
+  color: var(--faint);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.finding-title {
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.finding-detail {
+  color: var(--muted);
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+
+.diagnose-clear {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--g-result) 10%, transparent);
+  color: var(--g-result);
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+
+.diagnose-note {
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  color: var(--faint);
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+/* 診断から飛んできたセルを一時的に光らせる */
+.cell--focused {
+  animation: cell-flash 2.2s ease-out;
+}
+
+@keyframes cell-flash {
+  0%,
+  60% {
+    box-shadow: inset 0 0 0 2px var(--accent);
+    background: var(--accent-soft);
+  }
+  100% {
+    box-shadow: inset 0 0 0 2px transparent;
+    background: var(--surface);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cell--focused {
+    animation: none;
+    box-shadow: inset 0 0 0 2px var(--accent);
+  }
+}
+
+@media (max-width: 860px) {
+  .diagnose {
+    width: 260px;
+  }
+}
+
 /* ========== プレゼンモード ========== */
 .present {
   position: fixed;
@@ -1387,6 +1636,7 @@ p {
   .app-bar-actions,
   .board-tools,
   .zoom-bar,
+  .diagnose,
   .cell-add,
   .icon-btn,
   .persona-toggle svg,

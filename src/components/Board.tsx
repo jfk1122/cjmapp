@@ -17,6 +17,8 @@ interface Props {
   journey: Journey;
   readOnly: boolean;
   onChange: (next: Journey) => void;
+  /** 診断からの移動要求。同じセルを続けて選んでも動くよう at を見る */
+  focus?: { cellId: string; at: number } | null;
 }
 
 /** 編集中のカード。セルを跨いだ連続入力のため Board が持つ */
@@ -47,10 +49,11 @@ function toGroupRuns(rows: RowDef[]): GroupRun[] {
   return runs;
 }
 
-export function Board({ journey, readOnly, onChange }: Props) {
+export function Board({ journey, readOnly, onChange, focus }: Props) {
   const { stages, rows } = journey;
   const [cursor, setCursor] = useState<Cursor | null>(null);
   const [zoom, setZoom] = useState(1);
+  const [flash, setFlash] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const boardRef = useRef<HTMLDivElement>(null);
 
@@ -67,6 +70,16 @@ export function Board({ journey, readOnly, onChange }: Props) {
     // 左右のパディング分を差し引く
     setZoom(clampZoom((scroller.clientWidth - 32) / natural));
   }, [naturalWidth]);
+
+  // 診断で指摘されたセルまでスクロールし、一時的に光らせる
+  useEffect(() => {
+    if (!focus) return;
+    const el = scrollRef.current?.querySelector(`[data-cell-id="${CSS.escape(focus.cellId)}"]`);
+    el?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+    setFlash(focus.cellId);
+    const timer = setTimeout(() => setFlash(null), 2200);
+    return () => clearTimeout(timer);
+  }, [focus]);
 
   // Ctrl / ⌘ + ホイールでズーム。React の onWheel は passive なので直接登録する
   useEffect(() => {
@@ -190,6 +203,7 @@ export function Board({ journey, readOnly, onChange }: Props) {
                       hint={row.hint}
                       readOnly={readOnly}
                       editingCardId={cursor?.cellId === id ? cursor.cardId : null}
+                      highlighted={flash === id}
                       onAdd={() => {
                         const added = A.addCard(journey, id);
                         onChange(added.journey);

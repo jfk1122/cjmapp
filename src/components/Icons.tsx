@@ -114,6 +114,12 @@ export const IconPresent = ({ size = 16 }: Props) => (
   </svg>
 );
 
+export const IconDiagnose = ({ size = 16 }: Props) => (
+  <svg {...base(size)}>
+    <path d="M3 12h3.5l2-5 3 10 2.5-5H21" />
+  </svg>
+);
+
 export const IconChevron = ({ size = 16 }: Props) => (
   <svg {...base(size)}>
     <path d="m6 9 6 6 6-6" />
