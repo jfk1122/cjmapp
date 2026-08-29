@@ -198,7 +198,8 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: system-ui, -apple-system, 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Yu Gothic UI',
+  /* DADS の指定書体。読み込めなかった場合に備えて OS 標準書体を後ろに残す */
+  font-family: 'Noto Sans JP', system-ui, -apple-system, 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI',
     Meiryo, sans-serif;
   font-size: 16px;
   line-height: 1.7;
@@ -227,7 +228,9 @@ p {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 8px 8px;
+  /* DADS のタップ領域の下限。余白スケールを崩さずに高さだけ確保する */
+  min-height: 44px;
+  padding: 8px 16px;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-sm);
   background: var(--surface);
@@ -325,9 +328,11 @@ p {
 }
 
 .menu-item {
-  display: block;
+  display: flex;
+  align-items: center;
   width: 100%;
-  padding: 8px 8px;
+  min-height: 44px;
+  padding: 8px 16px;
   border: none;
   border-radius: var(--radius-sm);
   background: transparent;
@@ -1116,15 +1121,15 @@ p {
 .tone-row {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
   margin-top: 8px;
   padding-top: 4px;
   border-top: 1px solid var(--border);
 }
 
 .tone-dot {
-  width: 13px;
-  height: 13px;
+  width: 24px;
+  height: 24px;
   padding: 0;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-full);
@@ -1790,4 +1795,84 @@ p {
     border-color: transparent !important;
     background: transparent !important;
   }
+}
+
+/* ========== タップ領域 ==========
+   DADS は 44x44 を下限とする。板面の密度を落とさないよう、見た目の大きさは
+   変えずに擬似要素で当たり判定だけを広げる。
+   例外は .tone-dot（カード内に 6 つ並ぶため 44px 幅を取ると
+   マトリクスのセル幅を超える）。24px + 8px 間隔にとどめ、
+   縦方向だけ 44px を確保している。 */
+.icon-btn,
+.cell-add,
+.tone-dot,
+.zoom-value {
+  position: relative;
+}
+
+.icon-btn::after,
+.zoom-value::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 44px;
+  min-height: 44px;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+}
+
+/* 色ドットは横に 6 つ並ぶので、横に広げると隣の当たり判定と重なって
+   別の分類を選んでしまう。縦だけ 44px にして、横は 24px + 8px 間隔で
+   WCAG 2.5.8（24x24 + 間隔）を満たす形にする */
+.tone-dot::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 44px;
+  transform: translateY(-50%);
+}
+
+/* セル内の「追加」は下方向にだけ伸ばす。上に広げると直前のカードの
+   クリックを奪ってしまう */
+.cell-add::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 44px;
+}
+
+.persona-toggle {
+  min-height: 44px;
+}
+
+/* プレゼンモードの送りは間隔が狭く、当たり判定を広げると隣と重なるので、
+   ボタン自体を 44px にして中の点を擬似要素で描く */
+.present-dot {
+  width: 44px;
+  height: 44px;
+  background: none;
+}
+
+.present-dot::before {
+  content: '';
+  display: block;
+  width: 8px;
+  height: 8px;
+  margin: 0 auto;
+  border-radius: var(--radius-full);
+  background: var(--border-strong);
+}
+
+.present-dot.is-active {
+  background: none;
+}
+
+.present-dot.is-active::before {
+  background: var(--accent);
 }

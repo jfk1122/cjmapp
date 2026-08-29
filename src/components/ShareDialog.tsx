@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Journey } from '../types';
+import { useFocusTrap } from '../lib/focusTrap';
 import { buildShareUrl } from '../lib/share';
 import { IconCheck, IconClose, IconCopy } from './Icons';
 
@@ -15,6 +16,9 @@ export function ShareDialog({ journey, onClose }: Props) {
   const [url, setUrl] = useState('');
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState('');
+  const dialog = useRef<HTMLDivElement>(null);
+
+  useFocusTrap(dialog);
 
   useEffect(() => {
     let active = true;
@@ -48,6 +52,8 @@ export function ShareDialog({ journey, onClose }: Props) {
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div
+        ref={dialog}
+        tabIndex={-1}
         className="modal"
         role="dialog"
         aria-modal="true"
