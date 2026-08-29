@@ -1,18 +1,27 @@
 /* ========== デザイントークン ==========
-   テーマは 3 状態（明示的な light / dark 指定と、OS 追従）を想定し、
-   色はすべてトークン経由で参照する。 */
+   デジタル庁デザインシステム（DADS）v2 準拠。値は @digital-go-jp/design-tokens
+   からの引き写しで、括弧内は白または --bg に対するコントラスト実測値。
+   準拠の根拠と差分の経緯は docs/dads-review.md を参照。
+
+   テーマは 3 状態（明示的な light / dark 指定と、OS 追従）を想定する。
+   DADS はダークテーマのトークンを定義していないため、ダークは独自拡張。
+   ただしコントラスト要件（本文 4.5:1 / 非テキスト 3:1）は同じ基準で適用する。 */
 :root {
-  --bg: #f4f6f9;
+  --bg: #f2f2f2; /* solid-gray-50 */
   --surface: #ffffff;
-  --surface-2: #fafbfd;
-  --border: #e3e7ee;
-  --border-strong: #cfd6e2;
-  --text: #171a20;
-  --muted: #6b7382;
-  --faint: #9aa2b1;
+  --surface-2: #f2f2f2; /* solid-gray-50 */
+  --border: #cccccc; /* solid-gray-200 : 装飾的な区切り */
+  --border-strong: #7f7f7f; /* solid-gray-500 : セル境界・入力枠（白 4.00 / 地 3.58）*/
+  --text: #1a1a1a; /* solid-gray-900 : 白 17.40 / 地 15.55 */
+  --muted: #666666; /* solid-gray-600 : 白  5.74 / 地  5.13 */
   --accent: #4f46e5;
   --accent-soft: #eef0fe;
-  --danger: #d33b48;
+  --danger: #ec0000; /* red-800  / semantic-error-1 : 塗り・バー用 */
+  --danger-text: #ce0000; /* red-900  / semantic-error-2 : 白 5.79 / 地 5.18 */
+
+  /* フォーカスインジケーター。DADS で唯一の変更不可項目なのでテーマ間で切り替えない */
+  --focus-ring: #ffd43d; /* yellow-300 : 黒 14.74 / ダーク地 12.71 */
+  --focus-outer: #000000;
   --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
   --shadow-md: 0 8px 24px rgba(16, 24, 40, 0.12);
 
@@ -48,13 +57,14 @@
     --surface: #1c1f25;
     --surface-2: #21252c;
     --border: #2c313a;
-    --border-strong: #3a404b;
-    --text: #e8eaee;
-    --muted: #9aa3b2;
-    --faint: #767f8e;
+    /* ライトと同じ solid-gray-500。--surface 4.12 / --bg 4.52 でどちらも 3:1 を満たす */
+    --border-strong: #7f7f7f;
+    --text: #e8eaee; /* --surface 13.71 */
+    --muted: #9aa3b2; /* --surface  6.49 / --bg 7.12 */
     --accent: #8b8cf9;
     --accent-soft: #272a44;
     --danger: #f47b86;
+    --danger-text: #f47b86; /* --surface 6.31 */
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
     --shadow-md: 0 10px 28px rgba(0, 0, 0, 0.5);
 
@@ -85,13 +95,14 @@
   --surface: #1c1f25;
   --surface-2: #21252c;
   --border: #2c313a;
-  --border-strong: #3a404b;
-  --text: #e8eaee;
-  --muted: #9aa3b2;
-  --faint: #767f8e;
+  /* ライトと同じ solid-gray-500。--surface 4.12 / --bg 4.52 でどちらも 3:1 を満たす */
+  --border-strong: #7f7f7f;
+  --text: #e8eaee; /* --surface 13.71 */
+  --muted: #9aa3b2; /* --surface  6.49 / --bg 7.12 */
   --accent: #8b8cf9;
   --accent-soft: #272a44;
   --danger: #f47b86;
+  --danger-text: #f47b86; /* --surface 6.31 */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
   --shadow-md: 0 10px 28px rgba(0, 0, 0, 0.5);
 
@@ -143,9 +154,14 @@ p {
   margin: 0;
 }
 
+/* DADS のフォーカスインジケーターは Yellow-300 と Black の 2 重構造で、
+   ライト／ダークやカードの色にかかわらず、どちらか一方が必ずコントラストを確保する。
+   DADS で唯一の「変更不可」項目なので、色・構造ともに触らないこと。
+   内側 2px が Yellow-300（黒に対して 14.74:1）、外側 2px が Black。 */
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--focus-outer);
   outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--focus-ring);
 }
 
 /* ========== ボタン ========== */
@@ -168,7 +184,7 @@ p {
 
 .btn:hover:not(:disabled) {
   background: var(--surface-2);
-  border-color: var(--faint);
+  border-color: var(--border-strong);
 }
 
 .btn:disabled {
@@ -215,7 +231,7 @@ p {
   border: none;
   border-radius: 6px;
   background: transparent;
-  color: var(--faint);
+  color: var(--muted);
   cursor: pointer;
   flex: none;
 }
@@ -267,12 +283,12 @@ p {
 }
 
 .menu-item:disabled {
-  color: var(--faint);
+  color: var(--muted);
   cursor: default;
 }
 
 .menu-item--danger {
-  color: var(--danger);
+  color: var(--danger-text);
 }
 
 /* ========== ホーム ========== */
@@ -332,7 +348,7 @@ p {
 
 .count {
   margin-left: 6px;
-  color: var(--faint);
+  color: var(--muted);
   font-weight: 500;
 }
 
@@ -430,7 +446,7 @@ p {
 }
 
 .map-card-meta {
-  color: var(--faint);
+  color: var(--muted);
   font-size: 12px;
 }
 
@@ -444,7 +460,7 @@ p {
 
 .home-foot {
   margin-top: 48px;
-  color: var(--faint);
+  color: var(--muted);
   font-size: 12px;
 }
 
@@ -523,7 +539,6 @@ p {
 .row-label-input:focus {
   border-color: var(--accent);
   background: var(--surface);
-  outline: none;
 }
 
 .app-bar-actions {
@@ -534,7 +549,7 @@ p {
 
 .saved-label {
   margin-right: 4px;
-  color: var(--faint);
+  color: var(--muted);
   font-size: 12px;
 }
 
@@ -580,7 +595,7 @@ p {
 }
 
 .persona-preview {
-  color: var(--faint);
+  color: var(--muted);
   font-weight: 400;
 }
 
@@ -608,7 +623,7 @@ p {
 }
 
 .field-label {
-  color: var(--faint);
+  color: var(--muted);
   font-size: 11.5px;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -629,7 +644,6 @@ p {
 .field-input:focus {
   border-color: var(--accent);
   background: var(--surface);
-  outline: none;
 }
 
 .field-value {
@@ -649,7 +663,7 @@ p {
 }
 
 .tools-hint {
-  color: var(--faint);
+  color: var(--muted);
   font-size: 12px;
 }
 
@@ -697,7 +711,7 @@ p {
 }
 
 .corner-label {
-  color: var(--faint);
+  color: var(--muted);
   font-size: 11.5px;
   font-weight: 700;
 }
@@ -745,7 +759,7 @@ p {
 }
 
 .stage-index {
-  color: var(--faint);
+  color: var(--muted);
   font-size: 11px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
@@ -825,7 +839,6 @@ p {
 .group-rail-input:focus {
   border-color: var(--accent);
   background: var(--surface);
-  outline: none;
 }
 
 .group-rail-label {
@@ -911,7 +924,7 @@ p {
 
 .row-hint {
   padding: 0 5px;
-  color: var(--faint);
+  color: var(--muted);
   font-size: 11px;
   line-height: 1.45;
 }
@@ -932,7 +945,7 @@ p {
 }
 
 .cell-empty {
-  color: var(--faint);
+  color: var(--muted);
   font-size: 12px;
 }
 
@@ -944,7 +957,7 @@ p {
   border: 1px dashed transparent;
   border-radius: 7px;
   background: none;
-  color: var(--faint);
+  color: var(--muted);
   font: inherit;
   font-size: 11.5px;
   text-align: left;
@@ -985,7 +998,7 @@ p {
 }
 
 .card--editable:hover {
-  border-color: var(--faint);
+  border-color: var(--border-strong);
 }
 
 .card-text {
@@ -1017,9 +1030,6 @@ p {
   overflow: hidden;
 }
 
-.card-input:focus {
-  outline: none;
-}
 
 .tone-row {
   display: flex;
@@ -1179,13 +1189,13 @@ p {
 
 .modal-note {
   margin-top: 10px;
-  color: var(--danger);
+  color: var(--danger-text);
   font-size: 12px;
 }
 
 .modal-error {
   margin-top: 12px;
-  color: var(--danger);
+  color: var(--danger-text);
 }
 
 .share-row {
@@ -1323,7 +1333,7 @@ p {
 }
 
 .diagnose-summary strong {
-  color: var(--danger);
+  color: var(--danger-text);
 }
 
 .diagnose-list {
@@ -1379,7 +1389,7 @@ p {
 
 .finding-badge--warn {
   background: color-mix(in srgb, var(--danger) 15%, transparent);
-  color: var(--danger);
+  color: var(--danger-text);
 }
 
 .finding-badge--info {
@@ -1388,7 +1398,7 @@ p {
 }
 
 .finding-stage {
-  color: var(--faint);
+  color: var(--muted);
   font-size: 11px;
   font-weight: 700;
 }
@@ -1420,7 +1430,7 @@ p {
   margin-top: auto;
   padding-top: 10px;
   border-top: 1px solid var(--border);
-  color: var(--faint);
+  color: var(--muted);
   font-size: 11px;
   line-height: 1.55;
 }
@@ -1546,7 +1556,7 @@ p {
 }
 
 .present-section-title {
-  color: var(--faint);
+  color: var(--muted);
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -1582,7 +1592,7 @@ p {
 }
 
 .present-row-empty {
-  color: var(--faint);
+  color: var(--muted);
   font-size: 12px;
 }
 
