@@ -1064,9 +1064,29 @@ p {
 }
 
 .card-text {
-  display: block;
+  display: inline;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
+}
+
+/* 分類を色だけで伝えないための記号。モノクロ印刷でも残る */
+.card-mark {
+  margin-right: 4px;
+  color: var(--card-accent, var(--muted));
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 目には出さず、支援技術にだけ渡す */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .card--drop-before {
@@ -1112,8 +1132,11 @@ p {
   cursor: pointer;
 }
 
+/* 選択中は内側に白リングを入れて外周を太くする。box-shadow のリングだと
+   DADS のフォーカスインジケーターと見分けがつかなくなる */
 .tone-dot.is-active {
-  box-shadow: 0 0 0 2px var(--accent);
+  border-width: 3px;
+  border-color: var(--text);
 }
 
 .card-delete {

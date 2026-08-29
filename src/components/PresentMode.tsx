@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { GROUPS, cellKey, groupLabelOf, type Journey } from '../types';
+import { CardBody } from './CardItem';
 import { IconClose } from './Icons';
 
 interface Props {
@@ -94,7 +95,7 @@ export function PresentMode({ journey, onClose }: Props) {
                     <ul className="present-cards">
                       {cards.map((card) => (
                         <li key={card.id} className={`card card--${card.tone}`}>
-                          <span className="card-text">{card.text}</span>
+                          <CardBody card={card} />
                         </li>
                       ))}
                     </ul>
