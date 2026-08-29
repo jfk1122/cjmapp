@@ -14,10 +14,15 @@
   --border-strong: #7f7f7f; /* solid-gray-500 : セル境界・入力枠（白 4.00 / 地 3.58）*/
   --text: #1a1a1a; /* solid-gray-900 : 白 17.40 / 地 15.55 */
   --muted: #666666; /* solid-gray-600 : 白  5.74 / 地  5.13 */
-  --accent: #4f46e5;
-  --accent-soft: #eef0fe;
+  /* キーカラーは DADS の blue ramp。旧 #4f46e5 を palette.py match に通した
+     結果、色相差 10.7 度で blue が最近傍、該当段は 700 だった */
+  --accent: #264af4; /* blue-700 : 白 6.23 */
+  --accent-hover: #0031d8; /* blue-800 : 白 8.64 */
+  --accent-soft: #e8f1fe; /* blue-50  : --accent を載せて 5.48 */
+  --on-accent: #ffffff; /* --accent の上   6.23 */
   --danger: #ec0000; /* red-800  / semantic-error-1 : 塗り・バー用 */
   --danger-text: #ce0000; /* red-900  / semantic-error-2 : 白 5.79 / 地 5.18 */
+  --on-danger: #ffffff; /* --danger の上   4.60 */
 
   /* フォーカスインジケーター。DADS で唯一の変更不可項目なのでテーマ間で切り替えない */
   --focus-ring: #ffd43d; /* yellow-300 : 黒 14.74 / ダーク地 12.71 */
@@ -25,22 +30,34 @@
   --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
   --shadow-md: 0 8px 24px rgba(16, 24, 40, 0.12);
 
-  --g-user: #3f6ae4;
-  --g-triple: #d08207;
-  --g-execution: #8b5cf6;
-  --g-result: #0f9b6c;
-  --g-custom: #64748b;
+  /* グループカラーは縦ラベルの文字色を兼ねるので、--bg に対して 4.5:1 が要る。
+     旧 5 色は 2.82〜4.42:1 で全て届いていなかった */
+  --g-user: #0031d8; /* blue-800   : 地 7.72 */
+  --g-triple: #ac3e00; /* orange-900 : 地 5.45 */
+  --g-execution: #6f23d0; /* purple-700 : 地 6.64 */
+  --g-result: #197a4b; /* green-800  : 地 4.78 */
+  --g-custom: #666666; /* gray-600   : 地 5.13 */
 
-  --tone-blue-bg: #eef3ff;
-  --tone-blue-border: #d3e0ff;
-  --tone-green-bg: #eaf7f1;
-  --tone-green-border: #cdeadd;
-  --tone-amber-bg: #fff5e6;
-  --tone-amber-border: #ffe4bd;
-  --tone-red-bg: #fdeef0;
-  --tone-red-border: #fad5da;
-  --tone-purple-bg: #f4efff;
-  --tone-purple-border: #e3d7ff;
+  /* カードの分類色。背景は ramp 50、境界は 200、左バーは背景に対して
+     3:1 以上を確保できる暗い段。本文 --text はどの背景でも 14.8:1 以上 */
+  --tone-neutral-bg: #f2f2f2;
+  --tone-neutral-border: #cccccc;
+  --tone-neutral-bar: #767676; /* gray-536   : 背景比 4.06 */
+  --tone-blue-bg: #e8f1fe;
+  --tone-blue-border: #c5d7fb;
+  --tone-blue-bar: #264af4; /* blue-700   : 背景比 5.48 */
+  --tone-green-bg: #e6f5ec;
+  --tone-green-border: #9bd4b5;
+  --tone-green-bar: #1d8b56; /* green-700  : 背景比 3.82 */
+  --tone-amber-bg: #fbf5e0;
+  --tone-amber-border: #ffe380;
+  --tone-amber-bar: #927200; /* yellow-900 : 背景比 4.16 */
+  --tone-red-bg: #fdeeee;
+  --tone-red-border: #ffbbbb;
+  --tone-red-bar: #ec0000; /* red-800    : 背景比 4.08 */
+  --tone-purple-bg: #f1eafa;
+  --tone-purple-border: #ddc2ff;
+  --tone-purple-bar: #6f23d0; /* purple-700 : 背景比 6.33 */
 
   color-scheme: light;
 
@@ -61,29 +78,43 @@
     --border-strong: #7f7f7f;
     --text: #e8eaee; /* --surface 13.71 */
     --muted: #9aa3b2; /* --surface  6.49 / --bg 7.12 */
-    --accent: #8b8cf9;
-    --accent-soft: #272a44;
+    --accent: #9db7f9; /* blue-300 : --surface 8.31 */
+    --accent-hover: #c5d7fb; /* blue-200 */
+    --accent-soft: #16224a; /* --accent を載せて 7.77 */
+    /* ダークの --accent / --danger は明るいので、上に載る文字は黒側にする。
+       旧実装は白のままで 2.91:1 / 2.62:1 だった */
+    --on-accent: #1a1a1a; /* --accent の上   8.76 */
     --danger: #f47b86;
     --danger-text: #f47b86; /* --surface 6.31 */
+    --on-danger: #1a1a1a; /* --danger の上   6.65 */
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
     --shadow-md: 0 10px 28px rgba(0, 0, 0, 0.5);
 
-    --g-user: #7b9bff;
-    --g-triple: #e5a63c;
-    --g-execution: #b18cff;
-    --g-result: #3ec898;
-    --g-custom: #94a3b8;
+    /* ダークは ramp 300 段。地 #14161a に対して 8.6〜9.4:1 */
+    --g-user: #9db7f9;
+    --g-triple: #ffa66d;
+    --g-execution: #cda6ff;
+    --g-result: #71c598;
+    --g-custom: #b3b3b3;
 
+    --tone-neutral-bg: #21252c;
+    --tone-neutral-border: #3a404b;
+    --tone-neutral-bar: #b3b3b3; /* 背景比 7.33 */
     --tone-blue-bg: #1d2740;
     --tone-blue-border: #2c3c60;
+    --tone-blue-bar: #9db7f9; /* 背景比 7.47 */
     --tone-green-bg: #16302a;
     --tone-green-border: #21493d;
+    --tone-green-bar: #71c598; /* 背景比 6.81 */
     --tone-amber-bg: #33291a;
     --tone-amber-border: #4d3c22;
+    --tone-amber-bar: #ffa66d; /* 背景比 7.42 */
     --tone-red-bg: #35212a;
     --tone-red-border: #50303a;
+    --tone-red-bar: #ff9696; /* 背景比 7.17 */
     --tone-purple-bg: #29233f;
     --tone-purple-border: #3d3260;
+    --tone-purple-bar: #cda6ff; /* 背景比 7.46 */
 
     color-scheme: dark;
   }
@@ -99,29 +130,43 @@
   --border-strong: #7f7f7f;
   --text: #e8eaee; /* --surface 13.71 */
   --muted: #9aa3b2; /* --surface  6.49 / --bg 7.12 */
-  --accent: #8b8cf9;
-  --accent-soft: #272a44;
+  --accent: #9db7f9; /* blue-300 : --surface 8.31 */
+  --accent-hover: #c5d7fb; /* blue-200 */
+  --accent-soft: #16224a; /* --accent を載せて 7.77 */
+  /* ダークの --accent / --danger は明るいので、上に載る文字は黒側にする。
+     旧実装は白のままで 2.91:1 / 2.62:1 だった */
+  --on-accent: #1a1a1a; /* --accent の上   8.76 */
   --danger: #f47b86;
   --danger-text: #f47b86; /* --surface 6.31 */
+  --on-danger: #1a1a1a; /* --danger の上   6.65 */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
   --shadow-md: 0 10px 28px rgba(0, 0, 0, 0.5);
 
-  --g-user: #7b9bff;
-  --g-triple: #e5a63c;
-  --g-execution: #b18cff;
-  --g-result: #3ec898;
-  --g-custom: #94a3b8;
+  /* ダークは ramp 300 段。地 #14161a に対して 8.6〜9.4:1 */
+  --g-user: #9db7f9;
+  --g-triple: #ffa66d;
+  --g-execution: #cda6ff;
+  --g-result: #71c598;
+  --g-custom: #b3b3b3;
 
+  --tone-neutral-bg: #21252c;
+  --tone-neutral-border: #3a404b;
+  --tone-neutral-bar: #b3b3b3; /* 背景比 7.33 */
   --tone-blue-bg: #1d2740;
   --tone-blue-border: #2c3c60;
+  --tone-blue-bar: #9db7f9; /* 背景比 7.47 */
   --tone-green-bg: #16302a;
   --tone-green-border: #21493d;
+  --tone-green-bar: #71c598; /* 背景比 6.81 */
   --tone-amber-bg: #33291a;
   --tone-amber-border: #4d3c22;
+  --tone-amber-bar: #ffa66d; /* 背景比 7.42 */
   --tone-red-bg: #35212a;
   --tone-red-border: #50303a;
+  --tone-red-bar: #ff9696; /* 背景比 7.17 */
   --tone-purple-bg: #29233f;
   --tone-purple-border: #3d3260;
+  --tone-purple-bar: #cda6ff; /* 背景比 7.46 */
 
   color-scheme: dark;
 }
@@ -195,12 +240,13 @@ p {
 .btn--primary {
   background: var(--accent);
   border-color: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 
+/* ステートは ramp 上を 1 段移動して作る（色を機械的に混ぜない） */
 .btn--primary:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--accent) 88%, #000);
-  border-color: transparent;
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
 }
 
 .btn--ghost {
@@ -316,7 +362,7 @@ p {
   height: 40px;
   border-radius: 11px;
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 .brand h1 {
@@ -800,7 +846,7 @@ p {
   left: 0;
   z-index: 4;
   overflow: hidden;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--border-strong);
   background: var(--bg);
 }
 
@@ -882,7 +928,7 @@ p {
   left: var(--rail-w);
   z-index: 2;
   padding: 10px 10px 10px 12px;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--border-strong);
   background: var(--bg);
 }
 
@@ -930,13 +976,15 @@ p {
 }
 
 /* セル */
+/* 行と列の境界はこのアプリでは「どの行のどのフェーズか」という情報そのもの。
+   装飾ではないので --border ではなく非テキスト 3:1 を満たす --border-strong を使う */
 .cell {
   display: flex;
   flex-direction: column;
   gap: 5px;
   padding: 8px;
-  border-top: 1px solid var(--border);
-  border-left: 1px solid var(--border);
+  border-top: 1px solid var(--border-strong);
+  border-left: 1px solid var(--border-strong);
   background: var(--surface);
 }
 
@@ -1058,58 +1106,60 @@ p {
   margin-left: auto;
 }
 
-/* カードの色 */
+/* カードの分類色。左バーの色は直書きせず --tone-*-bar を参照して、
+   ライトとダークで同じ規則が効くようにする */
 .card--neutral {
-  --card-bg: var(--surface-2);
-  --card-accent: var(--border-strong);
+  --card-bg: var(--tone-neutral-bg);
+  --card-border: var(--tone-neutral-border);
+  --card-accent: var(--tone-neutral-bar);
 }
 .tone-dot--neutral {
-  --dot: #cbd2de;
+  --dot: var(--tone-neutral-bar);
 }
 
 .card--blue {
   --card-bg: var(--tone-blue-bg);
   --card-border: var(--tone-blue-border);
-  --card-accent: #4b7bec;
+  --card-accent: var(--tone-blue-bar);
 }
 .tone-dot--blue {
-  --dot: #4b7bec;
+  --dot: var(--tone-blue-bar);
 }
 
 .card--green {
   --card-bg: var(--tone-green-bg);
   --card-border: var(--tone-green-border);
-  --card-accent: #10a06e;
+  --card-accent: var(--tone-green-bar);
 }
 .tone-dot--green {
-  --dot: #10a06e;
+  --dot: var(--tone-green-bar);
 }
 
 .card--amber {
   --card-bg: var(--tone-amber-bg);
   --card-border: var(--tone-amber-border);
-  --card-accent: #e08c1a;
+  --card-accent: var(--tone-amber-bar);
 }
 .tone-dot--amber {
-  --dot: #e08c1a;
+  --dot: var(--tone-amber-bar);
 }
 
 .card--red {
   --card-bg: var(--tone-red-bg);
   --card-border: var(--tone-red-border);
-  --card-accent: #dc4a5a;
+  --card-accent: var(--tone-red-bar);
 }
 .tone-dot--red {
-  --dot: #dc4a5a;
+  --dot: var(--tone-red-bar);
 }
 
 .card--purple {
   --card-bg: var(--tone-purple-bg);
   --card-border: var(--tone-purple-border);
-  --card-accent: #8b5cf6;
+  --card-accent: var(--tone-purple-bar);
 }
 .tone-dot--purple {
-  --dot: #8b5cf6;
+  --dot: var(--tone-purple-bar);
 }
 
 /* ========== ズーム ========== */
@@ -1239,7 +1289,7 @@ p {
   padding: 0 4px;
   border-radius: 999px;
   background: var(--danger);
-  color: #fff;
+  color: var(--on-danger);
   font-size: 10.5px;
   font-weight: 700;
   line-height: 17px;
@@ -1388,8 +1438,9 @@ p {
 }
 
 .finding-badge--warn {
-  background: color-mix(in srgb, var(--danger) 15%, transparent);
-  color: var(--danger-text);
+  /* 塗りを ramp の 50 段にする。--danger 15% の混色だと 3.99:1 で本文要件を割っていた */
+  background: var(--tone-red-bg);
+  color: var(--danger-text); /* 5.14 */
 }
 
 .finding-badge--info {
