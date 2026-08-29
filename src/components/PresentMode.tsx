@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { GROUPS, cellKey, groupLabelOf, type Journey } from '../types';
+import { useFocusTrap } from '../lib/focusTrap';
+import { CardBody } from './CardItem';
 import { IconClose } from './Icons';
 
 interface Props {
@@ -10,6 +12,9 @@ interface Props {
 /** フェーズを 1 列ずつ全画面で送る。ワークショップや報告の場を想定 */
 export function PresentMode({ journey, onClose }: Props) {
   const [index, setIndex] = useState(0);
+  const dialog = useRef<HTMLDivElement>(null);
+
+  useFocusTrap(dialog);
   const total = journey.stages.length;
   const stage = journey.stages[index];
 
@@ -41,7 +46,14 @@ export function PresentMode({ journey, onClose }: Props) {
   })).filter((s) => s.rows.length > 0);
 
   return (
-    <div className="present" role="dialog" aria-modal="true" aria-label="プレゼンモード">
+    <div
+      ref={dialog}
+      tabIndex={-1}
+      className="present"
+      role="dialog"
+      aria-modal="true"
+      aria-label="プレゼンモード"
+    >
       <header className="present-bar">
         <div className="present-doc">
           <span className="present-title">{journey.title}</span>
@@ -94,7 +106,7 @@ export function PresentMode({ journey, onClose }: Props) {
                     <ul className="present-cards">
                       {cards.map((card) => (
                         <li key={card.id} className={`card card--${card.tone}`}>
-                          <span className="card-text">{card.text}</span>
+                          <CardBody card={card} />
                         </li>
                       ))}
                     </ul>

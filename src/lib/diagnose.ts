@@ -30,7 +30,7 @@ export interface Diagnosis {
   findings: Finding[];
 }
 
-/** 懸念・課題として色づけされたカードとみなすトーン */
+/** 「注意」「懸念・課題」に分類されたカード（`types.ts` の TONES を参照） */
 const CONCERN_TONES = new Set<Tone>(['red', 'amber']);
 
 const rowsOfGroup = (journey: Journey, group: GroupKey): RowDef[] =>
@@ -157,7 +157,7 @@ export function diagnose(journey: Journey): Diagnosis {
         id: `concern-without-action:${stage.id}`,
         severity: 'warn',
         title: '挙がっている懸念に打ち手がありません',
-        detail: `「${concerns[0].text}」など ${concerns.length} 件が課題として色づけされていますが、対応する施策が空欄です。`,
+        detail: `「${concerns[0].text}」など ${concerns.length} 件が「注意」「懸念・課題」に分類されていますが、対応する施策が空欄です。`,
         stageId: stage.id,
         stageName,
         cellId: cellKey(execution[0].key, stage.id),

@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { TONES, type Card, type Tone } from '../types';
+import { TONES, toneOf, type Card, type Tone } from '../types';
 import type { Advance } from './Cell';
 import { IconTrash } from './Icons';
 
@@ -17,6 +17,27 @@ interface Props {
   onDragOver: (e: React.DragEvent) => void;
   onDrop: (e: React.DragEvent) => void;
   dropIndicator: boolean;
+}
+
+/**
+ * カードの中身。分類を色だけで伝えないよう、記号と読み上げ用のラベルを添える。
+ * プレゼンモードでも同じ表示にしたいので切り出してある。
+ */
+export function CardBody({ card }: { card: Card }) {
+  const tone = toneOf(card.tone);
+  return (
+    <>
+      {tone.mark && (
+        <span className="card-mark" aria-hidden="true">
+          {tone.mark}
+        </span>
+      )}
+      <span className="card-text">
+        {tone.mark && <span className="sr-only">{`${tone.label}: `}</span>}
+        {card.text}
+      </span>
+    </>
+  );
 }
 
 /** 箇条書き記号を落として 1 行 1 カードにする */
@@ -106,7 +127,9 @@ export function CardItem({
               key={t.key}
               type="button"
               className={`tone-dot tone-dot--${t.key}${card.tone === t.key ? ' is-active' : ''}`}
-              aria-label={`色: ${t.label}`}
+              aria-label={`分類: ${t.label}`}
+              aria-pressed={card.tone === t.key}
+              title={t.label}
               // onMouseDown で処理して、textarea の blur による確定より先に色を反映させる
               onMouseDown={(e) => {
                 e.preventDefault();
@@ -151,7 +174,7 @@ export function CardItem({
         }
       }}
     >
-      <span className="card-text">{card.text}</span>
+      <CardBody card={card} />
     </div>
   );
 }

@@ -1,44 +1,89 @@
 /* ========== デザイントークン ==========
-   テーマは 3 状態（明示的な light / dark 指定と、OS 追従）を想定し、
-   色はすべてトークン経由で参照する。 */
+   デジタル庁デザインシステム（DADS）v2 準拠。値は @digital-go-jp/design-tokens
+   からの引き写しで、括弧内は白または --bg に対するコントラスト実測値。
+   準拠の根拠と差分の経緯は docs/dads-review.md を参照。
+
+   テーマは 3 状態（明示的な light / dark 指定と、OS 追従）を想定する。
+   DADS はダークテーマのトークンを定義していないため、ダークは独自拡張。
+   ただしコントラスト要件（本文 4.5:1 / 非テキスト 3:1）は同じ基準で適用する。 */
 :root {
-  --bg: #f4f6f9;
+  --bg: #f2f2f2; /* solid-gray-50 */
   --surface: #ffffff;
-  --surface-2: #fafbfd;
-  --border: #e3e7ee;
-  --border-strong: #cfd6e2;
-  --text: #171a20;
-  --muted: #6b7382;
-  --faint: #9aa2b1;
-  --accent: #4f46e5;
-  --accent-soft: #eef0fe;
-  --danger: #d33b48;
+  --surface-2: #f2f2f2; /* solid-gray-50 */
+  --border: #cccccc; /* solid-gray-200 : 装飾的な区切り */
+  --border-strong: #7f7f7f; /* solid-gray-500 : セル境界・入力枠（白 4.00 / 地 3.58）*/
+  --text: #1a1a1a; /* solid-gray-900 : 白 17.40 / 地 15.55 */
+  --muted: #666666; /* solid-gray-600 : 白  5.74 / 地  5.13 */
+  /* キーカラーは DADS の blue ramp。旧 #4f46e5 を palette.py match に通した
+     結果、色相差 10.7 度で blue が最近傍、該当段は 700 だった */
+  --accent: #264af4; /* blue-700 : 白 6.23 */
+  --accent-hover: #0031d8; /* blue-800 : 白 8.64 */
+  --accent-soft: #e8f1fe; /* blue-50  : --accent を載せて 5.48 */
+  --on-accent: #ffffff; /* --accent の上   6.23 */
+  --danger: #ec0000; /* red-800  / semantic-error-1 : 塗り・バー用 */
+  --danger-text: #ce0000; /* red-900  / semantic-error-2 : 白 5.79 / 地 5.18 */
+  --on-danger: #ffffff; /* --danger の上   4.60 */
+
+  /* フォーカスインジケーター。DADS で唯一の変更不可項目なのでテーマ間で切り替えない */
+  --focus-ring: #ffd43d; /* yellow-300 : 黒 14.74 / ダーク地 12.71 */
+  --focus-outer: #000000;
   --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
   --shadow-md: 0 8px 24px rgba(16, 24, 40, 0.12);
 
-  --g-user: #3f6ae4;
-  --g-triple: #d08207;
-  --g-execution: #8b5cf6;
-  --g-result: #0f9b6c;
-  --g-custom: #64748b;
+  /* グループカラーは縦ラベルの文字色を兼ねるので、--bg に対して 4.5:1 が要る。
+     旧 5 色は 2.82〜4.42:1 で全て届いていなかった */
+  --g-user: #0031d8; /* blue-800   : 地 7.72 */
+  --g-triple: #ac3e00; /* orange-900 : 地 5.45 */
+  --g-execution: #6f23d0; /* purple-700 : 地 6.64 */
+  --g-result: #197a4b; /* green-800  : 地 4.78 */
+  --g-custom: #666666; /* gray-600   : 地 5.13 */
 
-  --tone-blue-bg: #eef3ff;
-  --tone-blue-border: #d3e0ff;
-  --tone-green-bg: #eaf7f1;
-  --tone-green-border: #cdeadd;
-  --tone-amber-bg: #fff5e6;
-  --tone-amber-border: #ffe4bd;
-  --tone-red-bg: #fdeef0;
-  --tone-red-border: #fad5da;
-  --tone-purple-bg: #f4efff;
-  --tone-purple-border: #e3d7ff;
+  /* カードの分類色。背景は ramp 50、境界は 200、左バーは背景に対して
+     3:1 以上を確保できる暗い段。本文 --text はどの背景でも 14.8:1 以上 */
+  --tone-neutral-bg: #f2f2f2;
+  --tone-neutral-border: #cccccc;
+  --tone-neutral-bar: #767676; /* gray-536   : 背景比 4.06 */
+  --tone-neutral-text: #666666; /* gray-600   : 背景比 5.13 */
+  --tone-blue-bg: #e8f1fe;
+  --tone-blue-border: #c5d7fb;
+  --tone-blue-bar: #264af4; /* blue-700   : 背景比 5.48 */
+  --tone-blue-text: #264af4; /* blue-700   : 背景比 5.48 */
+  --tone-green-bg: #e6f5ec;
+  --tone-green-border: #9bd4b5;
+  --tone-green-bar: #1d8b56; /* green-700  : 背景比 3.82 */
+  --tone-green-text: #197a4b; /* green-800  : 背景比 4.75 */
+  --tone-amber-bg: #fbf5e0;
+  --tone-amber-border: #ffe380;
+  --tone-amber-bar: #927200; /* yellow-900 : 背景比 4.16 */
+  --tone-amber-text: #806300; /* yellow-1000: 背景比 5.20 */
+  --tone-red-bg: #fdeeee;
+  --tone-red-border: #ffbbbb;
+  --tone-red-bar: #ec0000; /* red-800    : 背景比 4.08 */
+  --tone-red-text: #ce0000; /* red-900    : 背景比 5.14 */
+  --tone-purple-bg: #f1eafa;
+  --tone-purple-border: #ddc2ff;
+  --tone-purple-bar: #6f23d0; /* purple-700 : 背景比 6.33 */
+  --tone-purple-text: #6f23d0; /* purple-700 : 背景比 6.33 */
 
   color-scheme: light;
 
-  --radius: 10px;
-  --head-w: 178px;
-  --rail-w: 34px;
-  --col-w: minmax(252px, 1fr);
+  /* 角丸は 3 種類まで。要素の大きさに比例させ、小さい要素に大きい角丸を当てない */
+  --radius-sm: 4px; /* border-radius-4  : カード・ボタン・入力欄・メニュー項目 */
+  --radius-md: 8px; /* border-radius-8  : モーダル・パネル・一覧のカード */
+  --radius-full: 624.9375rem;
+
+  /* 余白は 8px 基準の 5 段。密度優先の画面なので 4px を半段として認めている
+     （DADS は余白トークンを定義しないため、案件側で決めて明文化する規定） */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 48px;
+
+  /* 板面の文字を 14px に上げたぶん、見出し列と行見出しの幅を広げる */
+  --head-w: 200px;
+  --rail-w: 40px;
+  --col-w: minmax(280px, 1fr);
 }
 
 /* OS がダーク（明示的に light を選んだ場合を除く） */
@@ -48,32 +93,53 @@
     --surface: #1c1f25;
     --surface-2: #21252c;
     --border: #2c313a;
-    --border-strong: #3a404b;
-    --text: #e8eaee;
-    --muted: #9aa3b2;
-    --faint: #767f8e;
-    --accent: #8b8cf9;
-    --accent-soft: #272a44;
+    /* ライトと同じ solid-gray-500。--surface 4.12 / --bg 4.52 でどちらも 3:1 を満たす */
+    --border-strong: #7f7f7f;
+    --text: #e8eaee; /* --surface 13.71 */
+    --muted: #9aa3b2; /* --surface  6.49 / --bg 7.12 */
+    --accent: #9db7f9; /* blue-300 : --surface 8.31 */
+    --accent-hover: #c5d7fb; /* blue-200 */
+    --accent-soft: #16224a; /* --accent を載せて 7.77 */
+    /* ダークの --accent / --danger は明るいので、上に載る文字は黒側にする。
+       旧実装は白のままで 2.91:1 / 2.62:1 だった */
+    --on-accent: #1a1a1a; /* --accent の上   8.76 */
     --danger: #f47b86;
+    --danger-text: #f47b86; /* --surface 6.31 */
+    --on-danger: #1a1a1a; /* --danger の上   6.65 */
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
     --shadow-md: 0 10px 28px rgba(0, 0, 0, 0.5);
 
-    --g-user: #7b9bff;
-    --g-triple: #e5a63c;
-    --g-execution: #b18cff;
-    --g-result: #3ec898;
-    --g-custom: #94a3b8;
+    /* ダークは ramp 300 段。地 #14161a に対して 8.6〜9.4:1 */
+    --g-user: #9db7f9;
+    --g-triple: #ffa66d;
+    --g-execution: #cda6ff;
+    --g-result: #71c598;
+    --g-custom: #b3b3b3;
 
+    --tone-neutral-bg: #21252c;
+    --tone-neutral-border: #3a404b;
+    --tone-neutral-bar: #b3b3b3; /* 背景比 7.33 */
+    --tone-neutral-text: #b3b3b3;
     --tone-blue-bg: #1d2740;
     --tone-blue-border: #2c3c60;
+    --tone-blue-bar: #9db7f9; /* 背景比 7.47 */
+    --tone-blue-text: #9db7f9;
     --tone-green-bg: #16302a;
     --tone-green-border: #21493d;
+    --tone-green-bar: #71c598; /* 背景比 6.81 */
+    --tone-green-text: #71c598;
     --tone-amber-bg: #33291a;
     --tone-amber-border: #4d3c22;
+    --tone-amber-bar: #ffa66d; /* 背景比 7.42 */
+    --tone-amber-text: #ffa66d;
     --tone-red-bg: #35212a;
     --tone-red-border: #50303a;
+    --tone-red-bar: #ff9696; /* 背景比 7.17 */
+    --tone-red-text: #ff9696;
     --tone-purple-bg: #29233f;
     --tone-purple-border: #3d3260;
+    --tone-purple-bar: #cda6ff; /* 背景比 7.46 */
+    --tone-purple-text: #cda6ff;
 
     color-scheme: dark;
   }
@@ -85,32 +151,53 @@
   --surface: #1c1f25;
   --surface-2: #21252c;
   --border: #2c313a;
-  --border-strong: #3a404b;
-  --text: #e8eaee;
-  --muted: #9aa3b2;
-  --faint: #767f8e;
-  --accent: #8b8cf9;
-  --accent-soft: #272a44;
+  /* ライトと同じ solid-gray-500。--surface 4.12 / --bg 4.52 でどちらも 3:1 を満たす */
+  --border-strong: #7f7f7f;
+  --text: #e8eaee; /* --surface 13.71 */
+  --muted: #9aa3b2; /* --surface  6.49 / --bg 7.12 */
+  --accent: #9db7f9; /* blue-300 : --surface 8.31 */
+  --accent-hover: #c5d7fb; /* blue-200 */
+  --accent-soft: #16224a; /* --accent を載せて 7.77 */
+  /* ダークの --accent / --danger は明るいので、上に載る文字は黒側にする。
+     旧実装は白のままで 2.91:1 / 2.62:1 だった */
+  --on-accent: #1a1a1a; /* --accent の上   8.76 */
   --danger: #f47b86;
+  --danger-text: #f47b86; /* --surface 6.31 */
+  --on-danger: #1a1a1a; /* --danger の上   6.65 */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
   --shadow-md: 0 10px 28px rgba(0, 0, 0, 0.5);
 
-  --g-user: #7b9bff;
-  --g-triple: #e5a63c;
-  --g-execution: #b18cff;
-  --g-result: #3ec898;
-  --g-custom: #94a3b8;
+  /* ダークは ramp 300 段。地 #14161a に対して 8.6〜9.4:1 */
+  --g-user: #9db7f9;
+  --g-triple: #ffa66d;
+  --g-execution: #cda6ff;
+  --g-result: #71c598;
+  --g-custom: #b3b3b3;
 
+  --tone-neutral-bg: #21252c;
+  --tone-neutral-border: #3a404b;
+  --tone-neutral-bar: #b3b3b3; /* 背景比 7.33 */
+  --tone-neutral-text: #b3b3b3;
   --tone-blue-bg: #1d2740;
   --tone-blue-border: #2c3c60;
+  --tone-blue-bar: #9db7f9; /* 背景比 7.47 */
+  --tone-blue-text: #9db7f9;
   --tone-green-bg: #16302a;
   --tone-green-border: #21493d;
+  --tone-green-bar: #71c598; /* 背景比 6.81 */
+  --tone-green-text: #71c598;
   --tone-amber-bg: #33291a;
   --tone-amber-border: #4d3c22;
+  --tone-amber-bar: #ffa66d; /* 背景比 7.42 */
+  --tone-amber-text: #ffa66d;
   --tone-red-bg: #35212a;
   --tone-red-border: #50303a;
+  --tone-red-bar: #ff9696; /* 背景比 7.17 */
+  --tone-red-text: #ff9696;
   --tone-purple-bg: #29233f;
   --tone-purple-border: #3d3260;
+  --tone-purple-bar: #cda6ff; /* 背景比 7.46 */
+  --tone-purple-text: #cda6ff;
 
   color-scheme: dark;
 }
@@ -129,10 +216,11 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: system-ui, -apple-system, 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Yu Gothic UI',
+  /* DADS の指定書体。読み込めなかった場合に備えて OS 標準書体を後ろに残す */
+  font-family: 'Noto Sans JP', system-ui, -apple-system, 'Hiragino Kaku Gothic ProN', 'Yu Gothic UI',
     Meiryo, sans-serif;
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: 16px;
+  line-height: 1.7;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -143,32 +231,40 @@ p {
   margin: 0;
 }
 
+/* DADS のフォーカスインジケーターは Yellow-300 と Black の 2 重構造で、
+   ライト／ダークやカードの色にかかわらず、どちらか一方が必ずコントラストを確保する。
+   DADS で唯一の「変更不可」項目なので、色・構造ともに触らないこと。
+   内側 2px が Yellow-300（黒に対して 14.74:1）、外側 2px が Black。 */
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--focus-outer);
   outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--focus-ring);
 }
 
 /* ========== ボタン ========== */
 .btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 7px 12px;
+  gap: 4px;
+  /* DADS のタップ領域の下限。余白スケールを崩さずに高さだけ確保する */
+  min-height: 44px;
+  padding: 8px 16px;
   border: 1px solid var(--border-strong);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background: var(--surface);
   color: var(--text);
   font: inherit;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
   transition: background 0.12s, border-color 0.12s, opacity 0.12s;
+  line-height: 1;
 }
 
 .btn:hover:not(:disabled) {
   background: var(--surface-2);
-  border-color: var(--faint);
+  border-color: var(--border-strong);
 }
 
 .btn:disabled {
@@ -179,12 +275,13 @@ p {
 .btn--primary {
   background: var(--accent);
   border-color: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 
+/* ステートは ramp 上を 1 段移動して作る（色を機械的に混ぜない） */
 .btn--primary:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--accent) 88%, #000);
-  border-color: transparent;
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
 }
 
 .btn--ghost {
@@ -213,9 +310,9 @@ p {
   height: 26px;
   padding: 0;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: transparent;
-  color: var(--faint);
+  color: var(--muted);
   cursor: pointer;
   flex: none;
 }
@@ -243,21 +340,23 @@ p {
   min-width: 190px;
   padding: 4px;
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: var(--radius-md);
   background: var(--surface);
   box-shadow: var(--shadow-md);
 }
 
 .menu-item {
-  display: block;
+  display: flex;
+  align-items: center;
   width: 100%;
-  padding: 7px 10px;
+  min-height: 44px;
+  padding: 8px 16px;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: transparent;
   color: var(--text);
   font: inherit;
-  font-size: 13px;
+  font-size: 16px;
   text-align: left;
   cursor: pointer;
 }
@@ -267,30 +366,30 @@ p {
 }
 
 .menu-item:disabled {
-  color: var(--faint);
+  color: var(--muted);
   cursor: default;
 }
 
 .menu-item--danger {
-  color: var(--danger);
+  color: var(--danger-text);
 }
 
 /* ========== ホーム ========== */
 .home {
   max-width: 1040px;
   margin: 0 auto;
-  padding: 48px 24px 64px;
+  padding: 48px 24px 48px;
 }
 
 .home-hero {
-  padding-bottom: 32px;
+  padding-bottom: 48px;
   border-bottom: 1px solid var(--border);
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
 
 .brand-mark {
@@ -298,58 +397,58 @@ p {
   place-items: center;
   width: 40px;
   height: 40px;
-  border-radius: 11px;
+  border-radius: var(--radius-md);
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 .brand h1 {
-  font-size: 21px;
+  font-size: 24px;
   letter-spacing: 0.01em;
 }
 
 .brand-sub {
   color: var(--muted);
-  font-size: 13px;
+  font-size: 16px;
 }
 
 .home-lead {
   max-width: 62ch;
-  margin-top: 18px;
+  margin-top: 16px;
   color: var(--muted);
 }
 
 .home-section {
-  margin-top: 40px;
+  margin-top: 48px;
 }
 
 .section-title {
-  margin-bottom: 14px;
-  font-size: 14px;
+  margin-bottom: 16px;
+  font-size: 16px;
   font-weight: 700;
   letter-spacing: 0.02em;
 }
 
 .count {
-  margin-left: 6px;
-  color: var(--faint);
-  font-weight: 500;
+  margin-left: 4px;
+  color: var(--muted);
+  font-weight: 400;
 }
 
 .template-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(232px, 1fr));
-  gap: 12px;
+  gap: 8px;
 }
 
 .template-card {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 6px;
+  gap: 4px;
   padding: 16px;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   background: var(--surface);
   box-shadow: var(--shadow-sm);
   font: inherit;
@@ -369,7 +468,7 @@ p {
   place-items: center;
   width: 26px;
   height: 26px;
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   background: var(--accent-soft);
   color: var(--accent);
 }
@@ -380,7 +479,7 @@ p {
 
 .template-desc {
   color: var(--muted);
-  font-size: 12.5px;
+  font-size: 16px;
 }
 
 .map-list {
@@ -396,9 +495,9 @@ p {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 4px 12px 4px 4px;
+  padding: 4px 8px 4px 4px;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   background: var(--surface);
 }
 
@@ -410,8 +509,8 @@ p {
   display: flex;
   flex-direction: column;
   flex: 1;
-  gap: 2px;
-  padding: 12px;
+  gap: 4px;
+  padding: 8px;
   border: none;
   background: none;
   font: inherit;
@@ -426,32 +525,32 @@ p {
 
 .map-card-sub {
   color: var(--muted);
-  font-size: 12.5px;
+  font-size: 16px;
 }
 
 .map-card-meta {
-  color: var(--faint);
-  font-size: 12px;
+  color: var(--muted);
+  font-size: 14px;
 }
 
 .empty-state {
-  padding: 32px;
+  padding: 48px;
   border: 1px dashed var(--border-strong);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   color: var(--muted);
   text-align: center;
 }
 
 .home-foot {
   margin-top: 48px;
-  color: var(--faint);
-  font-size: 12px;
+  color: var(--muted);
+  font-size: 14px;
 }
 
 .notice {
   display: grid;
   place-content: center;
-  gap: 14px;
+  gap: 16px;
   justify-items: center;
   height: 100%;
   color: var(--muted);
@@ -467,8 +566,8 @@ p {
 .app-bar {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 16px;
+  gap: 8px;
+  padding: 8px 16px;
   border-bottom: 1px solid var(--border);
   background: var(--surface);
 }
@@ -482,30 +581,30 @@ p {
 
 .doc-title {
   width: 100%;
-  padding: 2px 6px;
+  padding: 4px 4px;
   border: 1px solid transparent;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: transparent;
   color: inherit;
   font: inherit;
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 700;
 }
 
 .doc-sub {
   width: 100%;
-  padding: 1px 6px;
+  padding: 4px 4px;
   border: 1px solid transparent;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: transparent;
   color: var(--muted);
   font: inherit;
-  font-size: 12.5px;
+  font-size: 14px;
 }
 
 .doc-title--static,
 .doc-sub--static {
-  padding: 2px 6px;
+  padding: 4px 4px;
 }
 
 .doc-title:hover,
@@ -523,25 +622,24 @@ p {
 .row-label-input:focus {
   border-color: var(--accent);
   background: var(--surface);
-  outline: none;
 }
 
 .app-bar-actions {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
 }
 
 .saved-label {
   margin-right: 4px;
-  color: var(--faint);
-  font-size: 12px;
+  color: var(--muted);
+  font-size: 14px;
 }
 
 .badge {
-  padding: 3px 8px;
-  border-radius: 999px;
-  font-size: 11.5px;
+  padding: 4px 8px;
+  border-radius: var(--radius-full);
+  font-size: 14px;
   font-weight: 700;
 }
 
@@ -559,14 +657,14 @@ p {
 .persona-toggle {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   width: 100%;
   padding: 8px 16px;
   border: none;
   background: none;
   color: var(--muted);
   font: inherit;
-  font-size: 12.5px;
+  font-size: 16px;
   font-weight: 700;
   cursor: pointer;
 }
@@ -580,21 +678,21 @@ p {
 }
 
 .persona-preview {
-  color: var(--faint);
+  color: var(--muted);
   font-weight: 400;
 }
 
 .persona-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 10px 16px;
-  padding: 0 16px 14px;
+  gap: 8px 16px;
+  padding: 0 16px 16px;
 }
 
 .field {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
 }
 
 .field--wide {
@@ -608,20 +706,20 @@ p {
 }
 
 .field-label {
-  color: var(--faint);
-  font-size: 11.5px;
+  color: var(--muted);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.02em;
 }
 
 .field-input {
-  padding: 7px 9px;
+  padding: 8px 8px;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background: var(--surface-2);
   color: inherit;
   font: inherit;
-  font-size: 13px;
+  font-size: 16px;
   resize: none;
   overflow: hidden;
 }
@@ -629,12 +727,11 @@ p {
 .field-input:focus {
   border-color: var(--accent);
   background: var(--surface);
-  outline: none;
 }
 
 .field-value {
-  padding: 6px 0;
-  font-size: 13px;
+  padding: 4px 0;
+  font-size: 16px;
   white-space: pre-wrap;
 }
 
@@ -643,14 +740,14 @@ p {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 16px;
+  padding: 8px 16px;
   border-bottom: 1px solid var(--border);
   background: var(--surface-2);
 }
 
 .tools-hint {
-  color: var(--faint);
-  font-size: 12px;
+  color: var(--muted);
+  font-size: 14px;
 }
 
 @media (max-width: 860px) {
@@ -661,12 +758,12 @@ p {
   }
 
   .app-bar {
-    gap: 6px;
-    padding: 8px 10px;
+    gap: 4px;
+    padding: 8px 8px;
   }
 
   .app-bar-actions {
-    gap: 2px;
+    gap: 4px;
   }
 }
 
@@ -674,7 +771,7 @@ p {
 .board-scroll {
   flex: 1;
   overflow: auto;
-  padding: 0 16px 80px;
+  padding: 0 16px 48px;
 }
 
 .board {
@@ -691,14 +788,14 @@ p {
   z-index: 5;
   display: flex;
   align-items: flex-end;
-  padding: 12px 10px;
+  padding: 8px 8px;
   border-bottom: 1px solid var(--border-strong);
   background: var(--bg);
 }
 
 .corner-label {
-  color: var(--faint);
-  font-size: 11.5px;
+  color: var(--muted);
+  font-size: 14px;
   font-weight: 700;
 }
 
@@ -706,7 +803,7 @@ p {
   position: sticky;
   top: 0;
   z-index: 3;
-  padding: 10px 22px 10px 14px;
+  padding: 8px 24px 8px 16px;
   border-bottom: 1px solid var(--border-strong);
   background: var(--bg);
 }
@@ -745,8 +842,8 @@ p {
 }
 
 .stage-index {
-  color: var(--faint);
-  font-size: 11px;
+  color: var(--muted);
+  font-size: 14px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
@@ -755,13 +852,13 @@ p {
 .stage-name-input {
   flex: 1;
   min-width: 0;
-  padding: 2px 5px;
+  padding: 4px 4px;
   border: 1px solid transparent;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: transparent;
   color: inherit;
   font: inherit;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
 }
 
@@ -769,14 +866,14 @@ p {
 .stage-summary-input {
   display: block;
   width: 100%;
-  padding: 1px 5px;
+  padding: 4px 4px;
   border: 1px solid transparent;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: transparent;
   color: var(--muted);
   font: inherit;
-  font-size: 11.5px;
-  line-height: 1.5;
+  font-size: 14px;
+  line-height: 1.3;
 }
 
 /* 行グループ: 左端の縦ラベルと破線の区切り */
@@ -786,7 +883,7 @@ p {
   left: 0;
   z-index: 4;
   overflow: hidden;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--border-strong);
   background: var(--bg);
 }
 
@@ -803,16 +900,16 @@ p {
   bottom: 10px;
   left: 4px;
   width: 3px;
-  border-radius: 3px;
+  border-radius: var(--radius-full);
   background: var(--rail, var(--border-strong));
 }
 
 /* writing-mode: vertical-rl は縦書きメトリクスを持たないフォントだと
    文字送りが崩れるため、横書きのまま回転させて縦ラベルにする */
 .group-rail-input {
-  padding: 2px 4px;
+  padding: 4px 4px;
   border: 1px solid transparent;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   background: transparent;
   font-family: inherit;
   text-align: center;
@@ -825,7 +922,6 @@ p {
 .group-rail-input:focus {
   border-color: var(--accent);
   background: var(--surface);
-  outline: none;
 }
 
 .group-rail-label {
@@ -835,8 +931,8 @@ p {
   transform: translate(-50%, -50%) rotate(-90deg);
   white-space: nowrap;
   color: var(--rail, var(--muted));
-  font-size: 11px;
-  font-weight: 800;
+  font-size: 14px;
+  font-weight: 700;
   letter-spacing: 0.08em;
 }
 
@@ -868,8 +964,8 @@ p {
   position: sticky;
   left: var(--rail-w);
   z-index: 2;
-  padding: 10px 10px 10px 12px;
-  border-top: 1px solid var(--border);
+  padding: 8px 8px 8px 8px;
+  border-top: 1px solid var(--border-strong);
   background: var(--bg);
 }
 
@@ -892,38 +988,40 @@ p {
 .row-head-inner {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
 }
 
 .row-label,
 .row-label-input {
   flex: 1;
   min-width: 0;
-  padding: 1px 5px;
+  padding: 4px 4px;
   border: 1px solid transparent;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: transparent;
   color: inherit;
   font: inherit;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
 }
 
 .row-hint {
-  padding: 0 5px;
-  color: var(--faint);
-  font-size: 11px;
-  line-height: 1.45;
+  padding: 0 4px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.3;
 }
 
 /* セル */
+/* 行と列の境界はこのアプリでは「どの行のどのフェーズか」という情報そのもの。
+   装飾ではないので --border ではなく非テキスト 3:1 を満たす --border-strong を使う */
 .cell {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
   padding: 8px;
-  border-top: 1px solid var(--border);
-  border-left: 1px solid var(--border);
+  border-top: 1px solid var(--border-strong);
+  border-left: 1px solid var(--border-strong);
   background: var(--surface);
 }
 
@@ -932,21 +1030,21 @@ p {
 }
 
 .cell-empty {
-  color: var(--faint);
-  font-size: 12px;
+  color: var(--muted);
+  font-size: 14px;
 }
 
 .cell-add {
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 5px 6px;
+  padding: 4px 4px;
   border: 1px dashed transparent;
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   background: none;
-  color: var(--faint);
+  color: var(--muted);
   font: inherit;
-  font-size: 11.5px;
+  font-size: 14px;
   text-align: left;
   cursor: pointer;
   opacity: 0;
@@ -971,13 +1069,13 @@ p {
 /* カード */
 .card {
   position: relative;
-  padding: 7px 9px;
+  padding: 8px 8px;
   border: 1px solid var(--card-border, var(--border));
   border-left: 3px solid var(--card-accent, var(--border-strong));
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   background: var(--card-bg, var(--surface-2));
-  font-size: 12.5px;
-  line-height: 1.5;
+  font-size: 14px;
+  line-height: 1.3;
 }
 
 .card--editable {
@@ -985,13 +1083,34 @@ p {
 }
 
 .card--editable:hover {
-  border-color: var(--faint);
+  border-color: var(--border-strong);
 }
 
 .card-text {
-  display: block;
+  display: inline;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
+}
+
+/* 分類を色だけで伝えないための記号。モノクロ印刷でも残る */
+.card-mark {
+  margin-right: 4px;
+  /* 記号はテキストなので 4.5:1 が要る。3:1 基準で選んだ左バーの色は使えない */
+  color: var(--card-mark, var(--muted));
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 目には出さず、支援技術にだけ渡す */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .card--drop-before {
@@ -1011,95 +1130,103 @@ p {
   background: transparent;
   color: inherit;
   font: inherit;
-  font-size: 12.5px;
-  line-height: 1.5;
+  font-size: 14px;
+  line-height: 1.3;
   resize: none;
   overflow: hidden;
 }
 
-.card-input:focus {
-  outline: none;
-}
 
 .tone-row {
   display: flex;
   align-items: center;
-  gap: 4px;
-  margin-top: 7px;
-  padding-top: 6px;
+  gap: 8px;
+  margin-top: 8px;
+  padding-top: 4px;
   border-top: 1px solid var(--border);
 }
 
 .tone-dot {
-  width: 13px;
-  height: 13px;
+  width: 24px;
+  height: 24px;
   padding: 0;
   border: 1px solid var(--border-strong);
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   background: var(--dot, var(--surface-2));
   cursor: pointer;
 }
 
+/* 選択中は内側に白リングを入れて外周を太くする。box-shadow のリングだと
+   DADS のフォーカスインジケーターと見分けがつかなくなる */
 .tone-dot.is-active {
-  box-shadow: 0 0 0 2px var(--accent);
+  border-width: 3px;
+  border-color: var(--text);
 }
 
 .card-delete {
   margin-left: auto;
 }
 
-/* カードの色 */
+/* カードの分類色。左バーの色は直書きせず --tone-*-bar を参照して、
+   ライトとダークで同じ規則が効くようにする */
 .card--neutral {
-  --card-bg: var(--surface-2);
-  --card-accent: var(--border-strong);
+  --card-bg: var(--tone-neutral-bg);
+  --card-border: var(--tone-neutral-border);
+  --card-accent: var(--tone-neutral-bar);
+  --card-mark: var(--tone-neutral-text);
 }
 .tone-dot--neutral {
-  --dot: #cbd2de;
+  --dot: var(--tone-neutral-bar);
 }
 
 .card--blue {
   --card-bg: var(--tone-blue-bg);
   --card-border: var(--tone-blue-border);
-  --card-accent: #4b7bec;
+  --card-accent: var(--tone-blue-bar);
+  --card-mark: var(--tone-blue-text);
 }
 .tone-dot--blue {
-  --dot: #4b7bec;
+  --dot: var(--tone-blue-bar);
 }
 
 .card--green {
   --card-bg: var(--tone-green-bg);
   --card-border: var(--tone-green-border);
-  --card-accent: #10a06e;
+  --card-accent: var(--tone-green-bar);
+  --card-mark: var(--tone-green-text);
 }
 .tone-dot--green {
-  --dot: #10a06e;
+  --dot: var(--tone-green-bar);
 }
 
 .card--amber {
   --card-bg: var(--tone-amber-bg);
   --card-border: var(--tone-amber-border);
-  --card-accent: #e08c1a;
+  --card-accent: var(--tone-amber-bar);
+  --card-mark: var(--tone-amber-text);
 }
 .tone-dot--amber {
-  --dot: #e08c1a;
+  --dot: var(--tone-amber-bar);
 }
 
 .card--red {
   --card-bg: var(--tone-red-bg);
   --card-border: var(--tone-red-border);
-  --card-accent: #dc4a5a;
+  --card-accent: var(--tone-red-bar);
+  --card-mark: var(--tone-red-text);
 }
 .tone-dot--red {
-  --dot: #dc4a5a;
+  --dot: var(--tone-red-bar);
 }
 
 .card--purple {
   --card-bg: var(--tone-purple-bg);
   --card-border: var(--tone-purple-border);
-  --card-accent: #8b5cf6;
+  --card-accent: var(--tone-purple-bar);
+  --card-mark: var(--tone-purple-text);
 }
 .tone-dot--purple {
-  --dot: #8b5cf6;
+  --dot: var(--tone-purple-bar);
 }
 
 /* ========== ズーム ========== */
@@ -1114,11 +1241,11 @@ p {
   z-index: 20;
   display: inline-flex;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
   width: 160px;
-  padding: 3px;
+  padding: 4px;
   border: 1px solid var(--border);
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   background: var(--surface);
   box-shadow: var(--shadow-md);
 }
@@ -1127,11 +1254,11 @@ p {
   flex: 1;
   padding: 4px 0;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   background: none;
   color: var(--muted);
   font: inherit;
-  font-size: 12px;
+  font-size: 14px;
   font-variant-numeric: tabular-nums;
   cursor: pointer;
 }
@@ -1148,15 +1275,15 @@ p {
   z-index: 100;
   display: grid;
   place-items: center;
-  padding: 20px;
+  padding: 16px;
   background: rgba(15, 18, 24, 0.45);
 }
 
 .modal {
   width: min(560px, 100%);
-  padding: 20px;
+  padding: 16px;
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   background: var(--surface);
   box-shadow: var(--shadow-md);
 }
@@ -1165,27 +1292,27 @@ p {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .modal-head h2 {
-  font-size: 16px;
+  font-size: 20px;
 }
 
 .modal-desc {
   color: var(--muted);
-  font-size: 12.5px;
+  font-size: 16px;
 }
 
 .modal-note {
-  margin-top: 10px;
-  color: var(--danger);
-  font-size: 12px;
+  margin-top: 8px;
+  color: var(--danger-text);
+  font-size: 14px;
 }
 
 .modal-error {
-  margin-top: 12px;
-  color: var(--danger);
+  margin-top: 8px;
+  color: var(--danger-text);
 }
 
 .share-row {
@@ -1197,13 +1324,13 @@ p {
 .share-input {
   flex: 1;
   min-width: 0;
-  padding: 8px 10px;
+  padding: 8px 8px;
   border: 1px solid var(--border-strong);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background: var(--surface-2);
   color: var(--muted);
   font: inherit;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 /* ========== ジャーニー診断 ========== */
@@ -1227,12 +1354,12 @@ p {
 .btn-badge {
   min-width: 17px;
   padding: 0 4px;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   background: var(--danger);
-  color: #fff;
-  font-size: 10.5px;
+  color: var(--on-danger);
+  font-size: 14px;
   font-weight: 700;
-  line-height: 17px;
+  line-height: 20px;
   text-align: center;
 }
 
@@ -1241,9 +1368,9 @@ p {
   flex: none;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
   overflow-y: auto;
-  padding: 14px 16px 24px;
+  padding: 16px 16px 24px;
   border-left: 1px solid var(--border);
   background: var(--surface);
 }
@@ -1255,47 +1382,47 @@ p {
 }
 
 .diagnose-title {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
 }
 
 .diagnose-score {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 14px;
+  gap: 16px;
+  padding: 16px;
   border: 1px solid var(--score-line, var(--border));
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   background: var(--score-bg, var(--surface-2));
 }
 
 .diagnose-score-value {
   display: flex;
   align-items: baseline;
-  gap: 2px;
+  gap: 4px;
   color: var(--score-fg, var(--text));
 }
 
 .diagnose-score-number {
   font-size: 32px;
-  font-weight: 800;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
   line-height: 1;
 }
 
 .diagnose-score-unit {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
 }
 
 .diagnose-score-label {
-  font-size: 12.5px;
+  font-size: 16px;
   font-weight: 700;
 }
 
 .diagnose-score-detail {
   color: var(--muted);
-  font-size: 11.5px;
+  font-size: 14px;
 }
 
 .diagnose-score--good {
@@ -1319,17 +1446,17 @@ p {
 
 .diagnose-summary {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .diagnose-summary strong {
-  color: var(--danger);
+  color: var(--danger-text);
 }
 
 .diagnose-list {
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 8px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -1337,7 +1464,7 @@ p {
 
 .finding {
   border: 1px solid var(--border);
-  border-radius: 9px;
+  border-radius: var(--radius-md);
   background: var(--surface-2);
 }
 
@@ -1345,11 +1472,11 @@ p {
 .finding--static {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
   width: 100%;
-  padding: 9px 11px;
+  padding: 8px 8px;
   border: none;
-  border-radius: 9px;
+  border-radius: var(--radius-md);
   background: none;
   font: inherit;
   color: inherit;
@@ -1367,19 +1494,20 @@ p {
 .finding-top {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
 }
 
 .finding-badge {
-  padding: 1px 6px;
-  border-radius: 999px;
-  font-size: 10.5px;
+  padding: 4px 4px;
+  border-radius: var(--radius-full);
+  font-size: 14px;
   font-weight: 700;
 }
 
 .finding-badge--warn {
-  background: color-mix(in srgb, var(--danger) 15%, transparent);
-  color: var(--danger);
+  /* 塗りを ramp の 50 段にする。--danger 15% の混色だと 3.99:1 で本文要件を割っていた */
+  background: var(--tone-red-bg);
+  color: var(--danger-text); /* 5.14 */
 }
 
 .finding-badge--info {
@@ -1388,41 +1516,41 @@ p {
 }
 
 .finding-stage {
-  color: var(--faint);
-  font-size: 11px;
+  color: var(--muted);
+  font-size: 14px;
   font-weight: 700;
 }
 
 .finding-title {
-  font-size: 12.5px;
+  font-size: 16px;
   font-weight: 700;
 }
 
 .finding-detail {
   color: var(--muted);
-  font-size: 11.5px;
-  line-height: 1.5;
+  font-size: 14px;
+  line-height: 1.7;
 }
 
 .diagnose-clear {
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  padding: 12px;
-  border-radius: 9px;
+  padding: 8px;
+  border-radius: var(--radius-md);
   background: color-mix(in srgb, var(--g-result) 10%, transparent);
   color: var(--g-result);
-  font-size: 12.5px;
-  line-height: 1.55;
+  font-size: 14px;
+  line-height: 1.7;
 }
 
 .diagnose-note {
   margin-top: auto;
-  padding-top: 10px;
+  padding-top: 8px;
   border-top: 1px solid var(--border);
-  color: var(--faint);
-  font-size: 11px;
-  line-height: 1.55;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
 }
 
 /* 診断から飛んできたセルを一時的に光らせる */
@@ -1469,8 +1597,8 @@ p {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 10px 20px;
+  gap: 8px;
+  padding: 8px 16px;
   border-bottom: 1px solid var(--border);
   background: var(--surface);
 }
@@ -1478,55 +1606,55 @@ p {
 .present-doc {
   display: flex;
   align-items: baseline;
-  gap: 10px;
+  gap: 8px;
   min-width: 0;
 }
 
 .present-title {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
 }
 
 .present-persona {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .present-nav {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
 }
 
 .present-count {
   color: var(--muted);
-  font-size: 12.5px;
+  font-size: 14px;
   font-variant-numeric: tabular-nums;
 }
 
 .present-stage {
   display: flex;
   align-items: baseline;
-  gap: 12px;
-  padding: 26px 32px 14px;
+  gap: 8px;
+  padding: 24px 48px 16px;
 }
 
 .present-index {
   color: var(--accent);
-  font-size: 15px;
-  font-weight: 800;
+  font-size: 16px;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 
 .present-name {
-  font-size: 26px;
-  font-weight: 800;
+  font-size: 32px;
+  font-weight: 700;
   letter-spacing: 0.01em;
 }
 
 .present-summary {
   color: var(--muted);
-  font-size: 13.5px;
+  font-size: 16px;
 }
 
 .present-body {
@@ -1534,29 +1662,29 @@ p {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   align-content: start;
-  gap: 18px 24px;
+  gap: 16px 24px;
   overflow: auto;
-  padding: 0 32px 24px;
+  padding: 0 48px 24px;
 }
 
 .present-section {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .present-section-title {
-  color: var(--faint);
-  font-size: 11px;
-  font-weight: 800;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 700;
   letter-spacing: 0.08em;
 }
 
 .present-row {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  padding-left: 10px;
+  gap: 4px;
+  padding-left: 8px;
   border-left: 3px solid var(--accent-line, var(--border-strong));
 }
 
@@ -1577,19 +1705,19 @@ p {
 }
 
 .present-row-label {
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 700;
 }
 
 .present-row-empty {
-  color: var(--faint);
-  font-size: 12px;
+  color: var(--muted);
+  font-size: 14px;
 }
 
 .present-cards {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -1598,8 +1726,8 @@ p {
 .present-dots {
   display: flex;
   justify-content: center;
-  gap: 6px;
-  padding: 12px;
+  gap: 4px;
+  padding: 8px;
   border-top: 1px solid var(--border);
 }
 
@@ -1608,7 +1736,7 @@ p {
   height: 8px;
   padding: 0;
   border: none;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   background: var(--border-strong);
   cursor: pointer;
 }
@@ -1631,7 +1759,8 @@ p {
 
   body {
     background: #fff;
-  }
+  line-height: 1.7;
+}
 
   .app-bar-actions,
   .board-tools,
@@ -1678,7 +1807,8 @@ p {
 
   .card {
     background: #fff !important;
-  }
+  line-height: 1.3;
+}
 
   /* 入力欄は罫線を消して、そのまま読める資料にする */
   .field-input,
@@ -1690,4 +1820,84 @@ p {
     border-color: transparent !important;
     background: transparent !important;
   }
+}
+
+/* ========== タップ領域 ==========
+   DADS は 44x44 を下限とする。板面の密度を落とさないよう、見た目の大きさは
+   変えずに擬似要素で当たり判定だけを広げる。
+   例外は .tone-dot（カード内に 6 つ並ぶため 44px 幅を取ると
+   マトリクスのセル幅を超える）。24px + 8px 間隔にとどめ、
+   縦方向だけ 44px を確保している。 */
+.icon-btn,
+.cell-add,
+.tone-dot,
+.zoom-value {
+  position: relative;
+}
+
+.icon-btn::after,
+.zoom-value::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 44px;
+  min-height: 44px;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+}
+
+/* 色ドットは横に 6 つ並ぶので、横に広げると隣の当たり判定と重なって
+   別の分類を選んでしまう。縦だけ 44px にして、横は 24px + 8px 間隔で
+   WCAG 2.5.8（24x24 + 間隔）を満たす形にする */
+.tone-dot::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 44px;
+  transform: translateY(-50%);
+}
+
+/* セル内の「追加」は下方向にだけ伸ばす。上に広げると直前のカードの
+   クリックを奪ってしまう */
+.cell-add::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 44px;
+}
+
+.persona-toggle {
+  min-height: 44px;
+}
+
+/* プレゼンモードの送りは間隔が狭く、当たり判定を広げると隣と重なるので、
+   ボタン自体を 44px にして中の点を擬似要素で描く */
+.present-dot {
+  width: 44px;
+  height: 44px;
+  background: none;
+}
+
+.present-dot::before {
+  content: '';
+  display: block;
+  width: 8px;
+  height: 8px;
+  margin: 0 auto;
+  border-radius: var(--radius-full);
+  background: var(--border-strong);
+}
+
+.present-dot.is-active {
+  background: none;
+}
+
+.present-dot.is-active::before {
+  background: var(--accent);
 }

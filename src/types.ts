@@ -33,7 +33,14 @@ export interface Stage {
   summary: string;
 }
 
-/** カードの色味。セル内での分類に使う */
+/**
+ * カードの分類。
+ *
+ * キーは色名のままだが、これは保存データにそのまま入っているため変えられない。
+ * ユーザーに見せるのは `TONES` の `label`（意味）と `mark`（記号）で、
+ * 診断（`lib/diagnose.ts`）も amber / red を「注意」「懸念・課題」として扱う。
+ * 分類は情報なので、色だけで伝えず記号を併記する。
+ */
 export type Tone = 'neutral' | 'blue' | 'green' | 'amber' | 'red' | 'purple';
 
 export interface Card {
@@ -120,11 +127,21 @@ export const ROW_PRESETS: Omit<RowDef, 'custom'>[] = [
   { key: 'kgi', label: 'KGI / 目標', hint: 'フェーズのゴール、事業指標との接続', group: 'result' },
 ];
 
-export const TONES: { key: Tone; label: string }[] = [
-  { key: 'neutral', label: 'グレー' },
-  { key: 'blue', label: 'ブルー' },
-  { key: 'green', label: 'グリーン' },
-  { key: 'amber', label: 'イエロー' },
-  { key: 'red', label: 'レッド' },
-  { key: 'purple', label: 'パープル' },
+export interface ToneDef {
+  key: Tone;
+  /** 分類の意味。色名では色覚特性のあるユーザーとモノクロ印刷で伝わらない */
+  label: string;
+  /** カードの先頭に出す記号。未分類だけは記号を持たない */
+  mark: string;
+}
+
+export const TONES: ToneDef[] = [
+  { key: 'neutral', label: '未分類', mark: '' },
+  { key: 'blue', label: '事実・データ', mark: '◆' },
+  { key: 'green', label: '強み・機会', mark: '◎' },
+  { key: 'amber', label: '注意', mark: '△' },
+  { key: 'red', label: '懸念・課題', mark: '!' },
+  { key: 'purple', label: '仮説', mark: '?' },
 ];
+
+export const toneOf = (key: Tone): ToneDef => TONES.find((t) => t.key === key) ?? TONES[0];
