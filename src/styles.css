@@ -61,10 +61,23 @@
 
   color-scheme: light;
 
-  --radius: 10px;
-  --head-w: 178px;
-  --rail-w: 34px;
-  --col-w: minmax(252px, 1fr);
+  /* 角丸は 3 種類まで。要素の大きさに比例させ、小さい要素に大きい角丸を当てない */
+  --radius-sm: 4px; /* border-radius-4  : カード・ボタン・入力欄・メニュー項目 */
+  --radius-md: 8px; /* border-radius-8  : モーダル・パネル・一覧のカード */
+  --radius-full: 624.9375rem;
+
+  /* 余白は 8px 基準の 5 段。密度優先の画面なので 4px を半段として認めている
+     （DADS は余白トークンを定義しないため、案件側で決めて明文化する規定） */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 48px;
+
+  /* 板面の文字を 14px に上げたぶん、見出し列と行見出しの幅を広げる */
+  --head-w: 200px;
+  --rail-w: 40px;
+  --col-w: minmax(280px, 1fr);
 }
 
 /* OS がダーク（明示的に light を選んだ場合を除く） */
@@ -187,8 +200,8 @@ body {
   color: var(--text);
   font-family: system-ui, -apple-system, 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Yu Gothic UI',
     Meiryo, sans-serif;
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: 16px;
+  line-height: 1.7;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -213,18 +226,19 @@ p {
 .btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 7px 12px;
+  gap: 4px;
+  padding: 8px 8px;
   border: 1px solid var(--border-strong);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background: var(--surface);
   color: var(--text);
   font: inherit;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
   transition: background 0.12s, border-color 0.12s, opacity 0.12s;
+  line-height: 1;
 }
 
 .btn:hover:not(:disabled) {
@@ -275,7 +289,7 @@ p {
   height: 26px;
   padding: 0;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: transparent;
   color: var(--muted);
   cursor: pointer;
@@ -305,7 +319,7 @@ p {
   min-width: 190px;
   padding: 4px;
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: var(--radius-md);
   background: var(--surface);
   box-shadow: var(--shadow-md);
 }
@@ -313,13 +327,13 @@ p {
 .menu-item {
   display: block;
   width: 100%;
-  padding: 7px 10px;
+  padding: 8px 8px;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: transparent;
   color: var(--text);
   font: inherit;
-  font-size: 13px;
+  font-size: 16px;
   text-align: left;
   cursor: pointer;
 }
@@ -341,18 +355,18 @@ p {
 .home {
   max-width: 1040px;
   margin: 0 auto;
-  padding: 48px 24px 64px;
+  padding: 48px 24px 48px;
 }
 
 .home-hero {
-  padding-bottom: 32px;
+  padding-bottom: 48px;
   border-bottom: 1px solid var(--border);
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
 
 .brand-mark {
@@ -360,58 +374,58 @@ p {
   place-items: center;
   width: 40px;
   height: 40px;
-  border-radius: 11px;
+  border-radius: var(--radius-md);
   background: var(--accent);
   color: var(--on-accent);
 }
 
 .brand h1 {
-  font-size: 21px;
+  font-size: 24px;
   letter-spacing: 0.01em;
 }
 
 .brand-sub {
   color: var(--muted);
-  font-size: 13px;
+  font-size: 16px;
 }
 
 .home-lead {
   max-width: 62ch;
-  margin-top: 18px;
+  margin-top: 16px;
   color: var(--muted);
 }
 
 .home-section {
-  margin-top: 40px;
+  margin-top: 48px;
 }
 
 .section-title {
-  margin-bottom: 14px;
-  font-size: 14px;
+  margin-bottom: 16px;
+  font-size: 16px;
   font-weight: 700;
   letter-spacing: 0.02em;
 }
 
 .count {
-  margin-left: 6px;
+  margin-left: 4px;
   color: var(--muted);
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .template-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(232px, 1fr));
-  gap: 12px;
+  gap: 8px;
 }
 
 .template-card {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 6px;
+  gap: 4px;
   padding: 16px;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   background: var(--surface);
   box-shadow: var(--shadow-sm);
   font: inherit;
@@ -431,7 +445,7 @@ p {
   place-items: center;
   width: 26px;
   height: 26px;
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   background: var(--accent-soft);
   color: var(--accent);
 }
@@ -442,7 +456,7 @@ p {
 
 .template-desc {
   color: var(--muted);
-  font-size: 12.5px;
+  font-size: 16px;
 }
 
 .map-list {
@@ -458,9 +472,9 @@ p {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 4px 12px 4px 4px;
+  padding: 4px 8px 4px 4px;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   background: var(--surface);
 }
 
@@ -472,8 +486,8 @@ p {
   display: flex;
   flex-direction: column;
   flex: 1;
-  gap: 2px;
-  padding: 12px;
+  gap: 4px;
+  padding: 8px;
   border: none;
   background: none;
   font: inherit;
@@ -488,18 +502,18 @@ p {
 
 .map-card-sub {
   color: var(--muted);
-  font-size: 12.5px;
+  font-size: 16px;
 }
 
 .map-card-meta {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .empty-state {
-  padding: 32px;
+  padding: 48px;
   border: 1px dashed var(--border-strong);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   color: var(--muted);
   text-align: center;
 }
@@ -507,13 +521,13 @@ p {
 .home-foot {
   margin-top: 48px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .notice {
   display: grid;
   place-content: center;
-  gap: 14px;
+  gap: 16px;
   justify-items: center;
   height: 100%;
   color: var(--muted);
@@ -529,8 +543,8 @@ p {
 .app-bar {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 16px;
+  gap: 8px;
+  padding: 8px 16px;
   border-bottom: 1px solid var(--border);
   background: var(--surface);
 }
@@ -544,30 +558,30 @@ p {
 
 .doc-title {
   width: 100%;
-  padding: 2px 6px;
+  padding: 4px 4px;
   border: 1px solid transparent;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: transparent;
   color: inherit;
   font: inherit;
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 700;
 }
 
 .doc-sub {
   width: 100%;
-  padding: 1px 6px;
+  padding: 4px 4px;
   border: 1px solid transparent;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: transparent;
   color: var(--muted);
   font: inherit;
-  font-size: 12.5px;
+  font-size: 14px;
 }
 
 .doc-title--static,
 .doc-sub--static {
-  padding: 2px 6px;
+  padding: 4px 4px;
 }
 
 .doc-title:hover,
@@ -590,19 +604,19 @@ p {
 .app-bar-actions {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
 }
 
 .saved-label {
   margin-right: 4px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .badge {
-  padding: 3px 8px;
-  border-radius: 999px;
-  font-size: 11.5px;
+  padding: 4px 8px;
+  border-radius: var(--radius-full);
+  font-size: 14px;
   font-weight: 700;
 }
 
@@ -620,14 +634,14 @@ p {
 .persona-toggle {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   width: 100%;
   padding: 8px 16px;
   border: none;
   background: none;
   color: var(--muted);
   font: inherit;
-  font-size: 12.5px;
+  font-size: 16px;
   font-weight: 700;
   cursor: pointer;
 }
@@ -648,14 +662,14 @@ p {
 .persona-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 10px 16px;
-  padding: 0 16px 14px;
+  gap: 8px 16px;
+  padding: 0 16px 16px;
 }
 
 .field {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
 }
 
 .field--wide {
@@ -670,19 +684,19 @@ p {
 
 .field-label {
   color: var(--muted);
-  font-size: 11.5px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.02em;
 }
 
 .field-input {
-  padding: 7px 9px;
+  padding: 8px 8px;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background: var(--surface-2);
   color: inherit;
   font: inherit;
-  font-size: 13px;
+  font-size: 16px;
   resize: none;
   overflow: hidden;
 }
@@ -693,8 +707,8 @@ p {
 }
 
 .field-value {
-  padding: 6px 0;
-  font-size: 13px;
+  padding: 4px 0;
+  font-size: 16px;
   white-space: pre-wrap;
 }
 
@@ -703,14 +717,14 @@ p {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 16px;
+  padding: 8px 16px;
   border-bottom: 1px solid var(--border);
   background: var(--surface-2);
 }
 
 .tools-hint {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
 }
 
 @media (max-width: 860px) {
@@ -721,12 +735,12 @@ p {
   }
 
   .app-bar {
-    gap: 6px;
-    padding: 8px 10px;
+    gap: 4px;
+    padding: 8px 8px;
   }
 
   .app-bar-actions {
-    gap: 2px;
+    gap: 4px;
   }
 }
 
@@ -734,7 +748,7 @@ p {
 .board-scroll {
   flex: 1;
   overflow: auto;
-  padding: 0 16px 80px;
+  padding: 0 16px 48px;
 }
 
 .board {
@@ -751,14 +765,14 @@ p {
   z-index: 5;
   display: flex;
   align-items: flex-end;
-  padding: 12px 10px;
+  padding: 8px 8px;
   border-bottom: 1px solid var(--border-strong);
   background: var(--bg);
 }
 
 .corner-label {
   color: var(--muted);
-  font-size: 11.5px;
+  font-size: 14px;
   font-weight: 700;
 }
 
@@ -766,7 +780,7 @@ p {
   position: sticky;
   top: 0;
   z-index: 3;
-  padding: 10px 22px 10px 14px;
+  padding: 8px 24px 8px 16px;
   border-bottom: 1px solid var(--border-strong);
   background: var(--bg);
 }
@@ -806,7 +820,7 @@ p {
 
 .stage-index {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
@@ -815,13 +829,13 @@ p {
 .stage-name-input {
   flex: 1;
   min-width: 0;
-  padding: 2px 5px;
+  padding: 4px 4px;
   border: 1px solid transparent;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: transparent;
   color: inherit;
   font: inherit;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
 }
 
@@ -829,14 +843,14 @@ p {
 .stage-summary-input {
   display: block;
   width: 100%;
-  padding: 1px 5px;
+  padding: 4px 4px;
   border: 1px solid transparent;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: transparent;
   color: var(--muted);
   font: inherit;
-  font-size: 11.5px;
-  line-height: 1.5;
+  font-size: 14px;
+  line-height: 1.3;
 }
 
 /* 行グループ: 左端の縦ラベルと破線の区切り */
@@ -863,16 +877,16 @@ p {
   bottom: 10px;
   left: 4px;
   width: 3px;
-  border-radius: 3px;
+  border-radius: var(--radius-full);
   background: var(--rail, var(--border-strong));
 }
 
 /* writing-mode: vertical-rl は縦書きメトリクスを持たないフォントだと
    文字送りが崩れるため、横書きのまま回転させて縦ラベルにする */
 .group-rail-input {
-  padding: 2px 4px;
+  padding: 4px 4px;
   border: 1px solid transparent;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   background: transparent;
   font-family: inherit;
   text-align: center;
@@ -894,8 +908,8 @@ p {
   transform: translate(-50%, -50%) rotate(-90deg);
   white-space: nowrap;
   color: var(--rail, var(--muted));
-  font-size: 11px;
-  font-weight: 800;
+  font-size: 14px;
+  font-weight: 700;
   letter-spacing: 0.08em;
 }
 
@@ -927,7 +941,7 @@ p {
   position: sticky;
   left: var(--rail-w);
   z-index: 2;
-  padding: 10px 10px 10px 12px;
+  padding: 8px 8px 8px 8px;
   border-top: 1px solid var(--border-strong);
   background: var(--bg);
 }
@@ -951,28 +965,28 @@ p {
 .row-head-inner {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
 }
 
 .row-label,
 .row-label-input {
   flex: 1;
   min-width: 0;
-  padding: 1px 5px;
+  padding: 4px 4px;
   border: 1px solid transparent;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: transparent;
   color: inherit;
   font: inherit;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
 }
 
 .row-hint {
-  padding: 0 5px;
+  padding: 0 4px;
   color: var(--muted);
-  font-size: 11px;
-  line-height: 1.45;
+  font-size: 14px;
+  line-height: 1.3;
 }
 
 /* セル */
@@ -981,7 +995,7 @@ p {
 .cell {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
   padding: 8px;
   border-top: 1px solid var(--border-strong);
   border-left: 1px solid var(--border-strong);
@@ -994,20 +1008,20 @@ p {
 
 .cell-empty {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .cell-add {
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 5px 6px;
+  padding: 4px 4px;
   border: 1px dashed transparent;
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   background: none;
   color: var(--muted);
   font: inherit;
-  font-size: 11.5px;
+  font-size: 14px;
   text-align: left;
   cursor: pointer;
   opacity: 0;
@@ -1032,13 +1046,13 @@ p {
 /* カード */
 .card {
   position: relative;
-  padding: 7px 9px;
+  padding: 8px 8px;
   border: 1px solid var(--card-border, var(--border));
   border-left: 3px solid var(--card-accent, var(--border-strong));
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   background: var(--card-bg, var(--surface-2));
-  font-size: 12.5px;
-  line-height: 1.5;
+  font-size: 14px;
+  line-height: 1.3;
 }
 
 .card--editable {
@@ -1072,8 +1086,8 @@ p {
   background: transparent;
   color: inherit;
   font: inherit;
-  font-size: 12.5px;
-  line-height: 1.5;
+  font-size: 14px;
+  line-height: 1.3;
   resize: none;
   overflow: hidden;
 }
@@ -1083,8 +1097,8 @@ p {
   display: flex;
   align-items: center;
   gap: 4px;
-  margin-top: 7px;
-  padding-top: 6px;
+  margin-top: 8px;
+  padding-top: 4px;
   border-top: 1px solid var(--border);
 }
 
@@ -1093,7 +1107,7 @@ p {
   height: 13px;
   padding: 0;
   border: 1px solid var(--border-strong);
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   background: var(--dot, var(--surface-2));
   cursor: pointer;
 }
@@ -1174,11 +1188,11 @@ p {
   z-index: 20;
   display: inline-flex;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
   width: 160px;
-  padding: 3px;
+  padding: 4px;
   border: 1px solid var(--border);
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   background: var(--surface);
   box-shadow: var(--shadow-md);
 }
@@ -1187,11 +1201,11 @@ p {
   flex: 1;
   padding: 4px 0;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   background: none;
   color: var(--muted);
   font: inherit;
-  font-size: 12px;
+  font-size: 14px;
   font-variant-numeric: tabular-nums;
   cursor: pointer;
 }
@@ -1208,15 +1222,15 @@ p {
   z-index: 100;
   display: grid;
   place-items: center;
-  padding: 20px;
+  padding: 16px;
   background: rgba(15, 18, 24, 0.45);
 }
 
 .modal {
   width: min(560px, 100%);
-  padding: 20px;
+  padding: 16px;
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   background: var(--surface);
   box-shadow: var(--shadow-md);
 }
@@ -1225,26 +1239,26 @@ p {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .modal-head h2 {
-  font-size: 16px;
+  font-size: 20px;
 }
 
 .modal-desc {
   color: var(--muted);
-  font-size: 12.5px;
+  font-size: 16px;
 }
 
 .modal-note {
-  margin-top: 10px;
+  margin-top: 8px;
   color: var(--danger-text);
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .modal-error {
-  margin-top: 12px;
+  margin-top: 8px;
   color: var(--danger-text);
 }
 
@@ -1257,13 +1271,13 @@ p {
 .share-input {
   flex: 1;
   min-width: 0;
-  padding: 8px 10px;
+  padding: 8px 8px;
   border: 1px solid var(--border-strong);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background: var(--surface-2);
   color: var(--muted);
   font: inherit;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 /* ========== ジャーニー診断 ========== */
@@ -1287,12 +1301,12 @@ p {
 .btn-badge {
   min-width: 17px;
   padding: 0 4px;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   background: var(--danger);
   color: var(--on-danger);
-  font-size: 10.5px;
+  font-size: 14px;
   font-weight: 700;
-  line-height: 17px;
+  line-height: 20px;
   text-align: center;
 }
 
@@ -1301,9 +1315,9 @@ p {
   flex: none;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
   overflow-y: auto;
-  padding: 14px 16px 24px;
+  padding: 16px 16px 24px;
   border-left: 1px solid var(--border);
   background: var(--surface);
 }
@@ -1315,47 +1329,47 @@ p {
 }
 
 .diagnose-title {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
 }
 
 .diagnose-score {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 14px;
+  gap: 16px;
+  padding: 16px;
   border: 1px solid var(--score-line, var(--border));
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   background: var(--score-bg, var(--surface-2));
 }
 
 .diagnose-score-value {
   display: flex;
   align-items: baseline;
-  gap: 2px;
+  gap: 4px;
   color: var(--score-fg, var(--text));
 }
 
 .diagnose-score-number {
   font-size: 32px;
-  font-weight: 800;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
   line-height: 1;
 }
 
 .diagnose-score-unit {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
 }
 
 .diagnose-score-label {
-  font-size: 12.5px;
+  font-size: 16px;
   font-weight: 700;
 }
 
 .diagnose-score-detail {
   color: var(--muted);
-  font-size: 11.5px;
+  font-size: 14px;
 }
 
 .diagnose-score--good {
@@ -1379,7 +1393,7 @@ p {
 
 .diagnose-summary {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .diagnose-summary strong {
@@ -1389,7 +1403,7 @@ p {
 .diagnose-list {
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 8px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -1397,7 +1411,7 @@ p {
 
 .finding {
   border: 1px solid var(--border);
-  border-radius: 9px;
+  border-radius: var(--radius-md);
   background: var(--surface-2);
 }
 
@@ -1405,11 +1419,11 @@ p {
 .finding--static {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
   width: 100%;
-  padding: 9px 11px;
+  padding: 8px 8px;
   border: none;
-  border-radius: 9px;
+  border-radius: var(--radius-md);
   background: none;
   font: inherit;
   color: inherit;
@@ -1427,13 +1441,13 @@ p {
 .finding-top {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
 }
 
 .finding-badge {
-  padding: 1px 6px;
-  border-radius: 999px;
-  font-size: 10.5px;
+  padding: 4px 4px;
+  border-radius: var(--radius-full);
+  font-size: 14px;
   font-weight: 700;
 }
 
@@ -1450,40 +1464,40 @@ p {
 
 .finding-stage {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
 }
 
 .finding-title {
-  font-size: 12.5px;
+  font-size: 16px;
   font-weight: 700;
 }
 
 .finding-detail {
   color: var(--muted);
-  font-size: 11.5px;
-  line-height: 1.5;
+  font-size: 14px;
+  line-height: 1.7;
 }
 
 .diagnose-clear {
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  padding: 12px;
-  border-radius: 9px;
+  padding: 8px;
+  border-radius: var(--radius-md);
   background: color-mix(in srgb, var(--g-result) 10%, transparent);
   color: var(--g-result);
-  font-size: 12.5px;
-  line-height: 1.55;
+  font-size: 14px;
+  line-height: 1.7;
 }
 
 .diagnose-note {
   margin-top: auto;
-  padding-top: 10px;
+  padding-top: 8px;
   border-top: 1px solid var(--border);
   color: var(--muted);
-  font-size: 11px;
-  line-height: 1.55;
+  font-size: 14px;
+  line-height: 1.7;
 }
 
 /* 診断から飛んできたセルを一時的に光らせる */
@@ -1530,8 +1544,8 @@ p {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 10px 20px;
+  gap: 8px;
+  padding: 8px 16px;
   border-bottom: 1px solid var(--border);
   background: var(--surface);
 }
@@ -1539,55 +1553,55 @@ p {
 .present-doc {
   display: flex;
   align-items: baseline;
-  gap: 10px;
+  gap: 8px;
   min-width: 0;
 }
 
 .present-title {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
 }
 
 .present-persona {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .present-nav {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
 }
 
 .present-count {
   color: var(--muted);
-  font-size: 12.5px;
+  font-size: 14px;
   font-variant-numeric: tabular-nums;
 }
 
 .present-stage {
   display: flex;
   align-items: baseline;
-  gap: 12px;
-  padding: 26px 32px 14px;
+  gap: 8px;
+  padding: 24px 48px 16px;
 }
 
 .present-index {
   color: var(--accent);
-  font-size: 15px;
-  font-weight: 800;
+  font-size: 16px;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 
 .present-name {
-  font-size: 26px;
-  font-weight: 800;
+  font-size: 32px;
+  font-weight: 700;
   letter-spacing: 0.01em;
 }
 
 .present-summary {
   color: var(--muted);
-  font-size: 13.5px;
+  font-size: 16px;
 }
 
 .present-body {
@@ -1595,29 +1609,29 @@ p {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   align-content: start;
-  gap: 18px 24px;
+  gap: 16px 24px;
   overflow: auto;
-  padding: 0 32px 24px;
+  padding: 0 48px 24px;
 }
 
 .present-section {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .present-section-title {
   color: var(--muted);
-  font-size: 11px;
-  font-weight: 800;
+  font-size: 14px;
+  font-weight: 700;
   letter-spacing: 0.08em;
 }
 
 .present-row {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  padding-left: 10px;
+  gap: 4px;
+  padding-left: 8px;
   border-left: 3px solid var(--accent-line, var(--border-strong));
 }
 
@@ -1638,19 +1652,19 @@ p {
 }
 
 .present-row-label {
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 700;
 }
 
 .present-row-empty {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .present-cards {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -1659,8 +1673,8 @@ p {
 .present-dots {
   display: flex;
   justify-content: center;
-  gap: 6px;
-  padding: 12px;
+  gap: 4px;
+  padding: 8px;
   border-top: 1px solid var(--border);
 }
 
@@ -1669,7 +1683,7 @@ p {
   height: 8px;
   padding: 0;
   border: none;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   background: var(--border-strong);
   cursor: pointer;
 }
@@ -1692,7 +1706,8 @@ p {
 
   body {
     background: #fff;
-  }
+  line-height: 1.7;
+}
 
   .app-bar-actions,
   .board-tools,
@@ -1739,7 +1754,8 @@ p {
 
   .card {
     background: #fff !important;
-  }
+  line-height: 1.3;
+}
 
   /* 入力欄は罫線を消して、そのまま読める資料にする */
   .field-input,

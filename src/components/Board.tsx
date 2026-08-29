@@ -283,8 +283,10 @@ function GroupRail({ group, span, readOnly, journey, onChange }: GroupRailProps)
           value={journey.groupLabels?.[group] ?? label}
           placeholder="グループ名"
           aria-label={`グループ名（${label}）`}
-          // 回転しているため、入力欄の幅が見た目の高さになる
-          style={{ width: `${Math.max(label.length + 3, 7)}em` }}
+          // 回転しているため、入力欄の幅が見た目の高さになる。
+          // 文字を 14px に上げたぶん em 換算の実寸が伸びるので、行が 1 本しかない
+          // グループ（高さ 91px 前後）でもはみ出さない下限にしてある
+          style={{ width: `${Math.max(label.length + 1, 5)}em` }}
           onChange={(e) => onChange(A.updateGroupLabel(journey, group, e.target.value))}
         />
       )}
