@@ -43,21 +43,27 @@
   --tone-neutral-bg: #f2f2f2;
   --tone-neutral-border: #cccccc;
   --tone-neutral-bar: #767676; /* gray-536   : 背景比 4.06 */
+  --tone-neutral-text: #666666; /* gray-600   : 背景比 5.13 */
   --tone-blue-bg: #e8f1fe;
   --tone-blue-border: #c5d7fb;
   --tone-blue-bar: #264af4; /* blue-700   : 背景比 5.48 */
+  --tone-blue-text: #264af4; /* blue-700   : 背景比 5.48 */
   --tone-green-bg: #e6f5ec;
   --tone-green-border: #9bd4b5;
   --tone-green-bar: #1d8b56; /* green-700  : 背景比 3.82 */
+  --tone-green-text: #197a4b; /* green-800  : 背景比 4.75 */
   --tone-amber-bg: #fbf5e0;
   --tone-amber-border: #ffe380;
   --tone-amber-bar: #927200; /* yellow-900 : 背景比 4.16 */
+  --tone-amber-text: #806300; /* yellow-1000: 背景比 5.20 */
   --tone-red-bg: #fdeeee;
   --tone-red-border: #ffbbbb;
   --tone-red-bar: #ec0000; /* red-800    : 背景比 4.08 */
+  --tone-red-text: #ce0000; /* red-900    : 背景比 5.14 */
   --tone-purple-bg: #f1eafa;
   --tone-purple-border: #ddc2ff;
   --tone-purple-bar: #6f23d0; /* purple-700 : 背景比 6.33 */
+  --tone-purple-text: #6f23d0; /* purple-700 : 背景比 6.33 */
 
   color-scheme: light;
 
@@ -113,21 +119,27 @@
     --tone-neutral-bg: #21252c;
     --tone-neutral-border: #3a404b;
     --tone-neutral-bar: #b3b3b3; /* 背景比 7.33 */
+    --tone-neutral-text: #b3b3b3;
     --tone-blue-bg: #1d2740;
     --tone-blue-border: #2c3c60;
     --tone-blue-bar: #9db7f9; /* 背景比 7.47 */
+    --tone-blue-text: #9db7f9;
     --tone-green-bg: #16302a;
     --tone-green-border: #21493d;
     --tone-green-bar: #71c598; /* 背景比 6.81 */
+    --tone-green-text: #71c598;
     --tone-amber-bg: #33291a;
     --tone-amber-border: #4d3c22;
     --tone-amber-bar: #ffa66d; /* 背景比 7.42 */
+    --tone-amber-text: #ffa66d;
     --tone-red-bg: #35212a;
     --tone-red-border: #50303a;
     --tone-red-bar: #ff9696; /* 背景比 7.17 */
+    --tone-red-text: #ff9696;
     --tone-purple-bg: #29233f;
     --tone-purple-border: #3d3260;
     --tone-purple-bar: #cda6ff; /* 背景比 7.46 */
+    --tone-purple-text: #cda6ff;
 
     color-scheme: dark;
   }
@@ -165,21 +177,27 @@
   --tone-neutral-bg: #21252c;
   --tone-neutral-border: #3a404b;
   --tone-neutral-bar: #b3b3b3; /* 背景比 7.33 */
+  --tone-neutral-text: #b3b3b3;
   --tone-blue-bg: #1d2740;
   --tone-blue-border: #2c3c60;
   --tone-blue-bar: #9db7f9; /* 背景比 7.47 */
+  --tone-blue-text: #9db7f9;
   --tone-green-bg: #16302a;
   --tone-green-border: #21493d;
   --tone-green-bar: #71c598; /* 背景比 6.81 */
+  --tone-green-text: #71c598;
   --tone-amber-bg: #33291a;
   --tone-amber-border: #4d3c22;
   --tone-amber-bar: #ffa66d; /* 背景比 7.42 */
+  --tone-amber-text: #ffa66d;
   --tone-red-bg: #35212a;
   --tone-red-border: #50303a;
   --tone-red-bar: #ff9696; /* 背景比 7.17 */
+  --tone-red-text: #ff9696;
   --tone-purple-bg: #29233f;
   --tone-purple-border: #3d3260;
   --tone-purple-bar: #cda6ff; /* 背景比 7.46 */
+  --tone-purple-text: #cda6ff;
 
   color-scheme: dark;
 }
@@ -1077,7 +1095,8 @@ p {
 /* 分類を色だけで伝えないための記号。モノクロ印刷でも残る */
 .card-mark {
   margin-right: 4px;
-  color: var(--card-accent, var(--muted));
+  /* 記号はテキストなので 4.5:1 が要る。3:1 基準で選んだ左バーの色は使えない */
+  color: var(--card-mark, var(--muted));
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
@@ -1154,6 +1173,7 @@ p {
   --card-bg: var(--tone-neutral-bg);
   --card-border: var(--tone-neutral-border);
   --card-accent: var(--tone-neutral-bar);
+  --card-mark: var(--tone-neutral-text);
 }
 .tone-dot--neutral {
   --dot: var(--tone-neutral-bar);
@@ -1163,6 +1183,7 @@ p {
   --card-bg: var(--tone-blue-bg);
   --card-border: var(--tone-blue-border);
   --card-accent: var(--tone-blue-bar);
+  --card-mark: var(--tone-blue-text);
 }
 .tone-dot--blue {
   --dot: var(--tone-blue-bar);
@@ -1172,6 +1193,7 @@ p {
   --card-bg: var(--tone-green-bg);
   --card-border: var(--tone-green-border);
   --card-accent: var(--tone-green-bar);
+  --card-mark: var(--tone-green-text);
 }
 .tone-dot--green {
   --dot: var(--tone-green-bar);
@@ -1181,6 +1203,7 @@ p {
   --card-bg: var(--tone-amber-bg);
   --card-border: var(--tone-amber-border);
   --card-accent: var(--tone-amber-bar);
+  --card-mark: var(--tone-amber-text);
 }
 .tone-dot--amber {
   --dot: var(--tone-amber-bar);
@@ -1190,6 +1213,7 @@ p {
   --card-bg: var(--tone-red-bg);
   --card-border: var(--tone-red-border);
   --card-accent: var(--tone-red-bar);
+  --card-mark: var(--tone-red-text);
 }
 .tone-dot--red {
   --dot: var(--tone-red-bar);
@@ -1199,6 +1223,7 @@ p {
   --card-bg: var(--tone-purple-bg);
   --card-border: var(--tone-purple-border);
   --card-accent: var(--tone-purple-bar);
+  --card-mark: var(--tone-purple-text);
 }
 .tone-dot--purple {
   --dot: var(--tone-purple-bar);
